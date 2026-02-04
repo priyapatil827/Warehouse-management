@@ -1,0 +1,123 @@
+:root {
+  --dark-teal: #132f38;
+  --white: #ffffff;
+  --deep-blue: #0b1f2a;
+  --medium-teal: #1e5d66;
+  --light-teal: #60b1b7;
+  --very-light-aqua: #c5f1f5;
+  --blue-accent: #7ab9e8;
+  --button-dark: #39404f;
+  --google-red: #ea4335;
+  --link-teal: #55a6b1;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.select-page {
+  width: 100vw;
+  height: 100vh;
+  background: var(--dark-teal);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Floating Blobs */
+.select-page::before {
+  content: "";
+  position: absolute;
+  width: 450px;
+  height: 450px;
+  background: radial-gradient(circle, var(--medium-teal), var(--blue-accent));
+  top: -150px;
+  right: -150px;
+  border-radius: 50%;
+  opacity: 0.35;
+}
+
+.select-page::after {
+  content: "";
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, var(--very-light-aqua), var(--light-teal));
+  bottom: -200px;
+  left: -200px;
+  border-radius: 50%;
+  opacity: 0.3;
+}
+
+.overlay {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.title {
+  color: var(--white);
+  font-size: 3rem;
+  margin-bottom: 60px;
+  text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+}
+
+.cards-container {
+  display: flex;
+  gap: 50px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Role Card */
+.role-card {
+  width: 200px;
+  height: 220px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  border-radius: 24px;
+  border: 1px solid rgba(255,255,255,0.2);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: var(--white);
+  cursor: pointer;
+  transition: 0.4s ease;
+}
+
+.role-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 40px rgba(30, 93, 102, 0.4);
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.role-icon {
+  font-size: 4rem;
+  color: var(--blue-accent);
+  margin-bottom: 15px;
+  transition: 0.3s;
+}
+
+.role-card:hover .role-icon {
+  color: var(--medium-teal);
+  transform: scale(1.2);
+}
+
+.role-name {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .cards-container {
+    flex-direction: column;
+    gap: 30px;
+  }
+}

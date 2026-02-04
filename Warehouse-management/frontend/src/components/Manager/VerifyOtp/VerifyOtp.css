@@ -1,0 +1,230 @@
+/* =========================
+   COLOR VARIABLES
+========================= */
+:root {
+  --dark-teal: #132f38;
+  --white: #ffffff;
+  --deep-blue: #0b1f2a;
+  --medium-teal: #1e5d66;
+  --light-teal: #60b1b7;
+  --very-light-aqua: #c5f1f5;
+  --blue-accent: #7ab9e8;
+  --button-dark: #39404f;
+  --google-red: #ea4335;
+  --link-teal: #55a6b1;
+}
+
+/* =========================
+   PAGE BACKGROUND
+========================= */
+.verify-page {
+  min-height: 100vh;
+  background: radial-gradient(circle at top left, var(--blue-accent), transparent 40%),
+              radial-gradient(circle at bottom right, var(--very-light-aqua), transparent 40%),
+              linear-gradient(135deg, var(--dark-teal), var(--deep-blue));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* Floating glowing blobs */
+.verify-page::before,
+.verify-page::after {
+  content: "";
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.6;
+  animation: floatBlob 10s ease-in-out infinite alternate;
+}
+
+.verify-page::before {
+  background: var(--light-teal);
+  top: -80px;
+  left: -80px;
+}
+
+.verify-page::after {
+  background: var(--blue-accent);
+  bottom: -80px;
+  right: -80px;
+  animation-delay: 3s;
+}
+
+@keyframes floatBlob {
+  from {
+    transform: translateY(0px) translateX(0px);
+  }
+  to {
+    transform: translateY(40px) translateX(30px);
+  }
+}
+
+/* =========================
+   GLASS CARD
+========================= */
+.verify-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(18px);
+  border-radius: 22px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  z-index: 1;
+  animation: fadeInUp 0.8s ease;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================
+   HEADER
+========================= */
+.verify-header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.verify-header h1 {
+  color: var(--white);
+  font-size: 28px;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+
+.verify-header p {
+  color: var(--very-light-aqua);
+  font-size: 14px;
+}
+
+/* =========================
+   FIELDS
+========================= */
+.verify-field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 18px;
+}
+
+.verify-field label {
+  color: var(--very-light-aqua);
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.verify-field input {
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 2px solid var(--light-teal);
+  background: transparent;
+  color: var(--white);
+  outline: none;
+  transition: 0.3s;
+}
+
+.verify-field input::placeholder {
+  color: #aacfd3;
+}
+
+.verify-field input:focus {
+  border-color: var(--blue-accent);
+  box-shadow: 0 0 12px var(--blue-accent);
+}
+
+/* =========================
+   OTP INPUT STYLING
+========================= */
+.otp-input {
+  display: flex;
+  justify-content: space-between;
+}
+
+.otp-input input {
+  width: 48px !important;
+  height: 52px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid var(--medium-teal);
+  border-radius: 10px;
+  color: var(--white);
+  font-size: 20px;
+  text-align: center;
+  transition: 0.3s;
+}
+
+.otp-input input:focus {
+  border-color: var(--blue-accent);
+  box-shadow: 0 0 10px var(--blue-accent);
+}
+
+/* =========================
+   BUTTON
+========================= */
+.verify-btn {
+  width: 100%;
+  padding: 14px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--medium-teal), var(--blue-accent));
+  color: var(--white);
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+  letter-spacing: 1px;
+}
+
+.verify-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(122, 185, 232, 0.5);
+}
+
+/* =========================
+   TOAST NOTIFICATIONS
+========================= */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  padding: 14px 20px;
+  border-radius: 14px;
+  color: var(--white);
+  font-size: 14px;
+  z-index: 999;
+  animation: slideIn 0.4s ease;
+  backdrop-filter: blur(10px);
+}
+
+.toast.success {
+  background: linear-gradient(135deg, var(--medium-teal), var(--blue-accent));
+}
+
+.toast.error {
+  background: linear-gradient(135deg, var(--google-red), #ff7b7b);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

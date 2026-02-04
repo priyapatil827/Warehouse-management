@@ -1,0 +1,201 @@
+/* ================================
+   EMPLOYEE MANAGEMENT – UNIQUE UI
+================================ */
+
+:root {
+  --dark-teal: #132f38;
+  --white: #ffffff;
+  --deep-blue: #0b1f2a;
+  --medium-teal: #1e5d66;
+  --light-teal: #60b1b7;
+  --very-light-aqua: #c5f1f5;
+  --blue-accent: #7ab9e8;
+  --button-dark: #39404f;
+  --google-red: #ea4335;
+  --link-teal: #55a6b1;
+}
+
+/* PAGE */
+.emp-page {
+  min-height: 100vh;
+  background: radial-gradient(circle at top right, #1e5d66, #132f38);
+  /* padding: 30px; */
+  color: var(--white);
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* TITLE */
+.emp-page h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  margin-top: 20px;
+  font-size: 2.4rem;
+  letter-spacing: 1px;
+  background: linear-gradient(90deg, #60b1b7, #7ab9e8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* FORM CARD */
+.emp-form {
+  max-width: 900px;
+  margin: auto;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  padding: 25px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(96, 177, 183, 0.3);
+  position: relative;
+}
+
+/* GLOW EFFECT */
+.emp-form::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 20px;
+  background: linear-gradient(120deg, #60b1b7, #7ab9e8, #1e5d66);
+  z-index: -1;
+  filter: blur(20px);
+  opacity: 0.5;
+}
+
+/* INPUTS */
+.emp-form input {
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--light-teal);
+  background: rgba(11, 31, 42, 0.8);
+  color: var(--white);
+  font-size: 14px;
+  transition: 0.3s ease;
+}
+
+.emp-form input::placeholder {
+  color: #a9dfe3;
+}
+
+.emp-form input:focus {
+  outline: none;
+  border-color: var(--blue-accent);
+  box-shadow: 0 0 12px rgba(122, 185, 232, 0.6);
+  transform: scale(1.03);
+}
+
+/* BUTTON */
+.emp-form button {
+  grid-column: span 2;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #1e5d66, #60b1b7);
+  color: var(--white);
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s ease;
+  box-shadow: 0 8px 25px rgba(96, 177, 183, 0.5);
+}
+
+.emp-form button:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 12px 35px rgba(122, 185, 232, 0.7);
+}
+
+/* TABLE CARD */
+.emp-table {
+  width: 100%;
+  max-width: 1100px;
+  margin: 50px auto 0;
+  border-collapse: separate;
+  border-spacing: 0 12px;
+}
+
+/* HEAD */
+.emp-table thead th {
+  text-align: left;
+  padding: 15px;
+  background: rgba(30, 93, 102, 0.9);
+  color: var(--very-light-aqua);
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+/* ROW */
+.emp-table tbody tr {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+  transition: 0.3s ease;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+}
+
+.emp-table tbody tr:hover {
+  transform: scale(1.02);
+  background: rgba(96, 177, 183, 0.2);
+}
+
+/* CELL */
+.emp-table td {
+  padding: 15px;
+  color: var(--white);
+}
+
+/* ACTION BUTTONS */
+.emp-table button {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  font-size: 13px;
+  cursor: pointer;
+  margin-right: 6px;
+  transition: 0.2s ease;
+}
+
+/* EDIT */
+.emp-table button:first-child {
+  background: linear-gradient(135deg, #7ab9e8, #60b1b7);
+  color: #0b1f2a;
+}
+
+.emp-table button:first-child:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(122, 185, 232, 0.7);
+}
+
+/* DELETE */
+.emp-table button:last-child {
+  background: linear-gradient(135deg, #ea4335, #ff7b6e);
+  color: white;
+}
+
+.emp-table button:last-child:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(234, 67, 53, 0.7);
+}
+
+/* EMPTY MESSAGE */
+.emp-table td[colspan] {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 20px;
+  color: #c5f1f5;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .emp-form {
+    grid-template-columns: 1fr;
+  }
+
+  .emp-form button {
+    grid-column: span 1;
+  }
+
+  .emp-page h1 {
+    font-size: 1.8rem;
+  }
+}

@@ -1,0 +1,250 @@
+/* ================================
+   PRODUCT VIEW MODAL – UNIQUE UI
+================================ */
+
+:root {
+  --pv-bg: rgba(10, 18, 26, 0.92);
+  --pv-card: rgba(20, 32, 44, 0.95);
+  --pv-accent: #00e5ff;
+  --pv-accent-soft: rgba(0, 229, 255, 0.2);
+  --pv-border: rgba(255, 255, 255, 0.08);
+  --pv-text: #e6f1f5;
+  --pv-muted: #9fb4c4;
+  --pv-danger: #ff4d4d;
+  --pv-success: #1aff7c;
+}
+
+/* OVERLAY */
+.pv-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--pv-bg);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: pvFadeIn 0.3s ease;
+}
+
+@keyframes pvFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* CARD */
+.pv-card {
+  background: var(--pv-card);
+  border: 1px solid var(--pv-border);
+  border-radius: 22px;
+  width: 90%;
+  max-width: 900px;
+  min-height: 420px;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.7);
+  animation: pvSlideUp 0.35s ease;
+}
+
+@keyframes pvSlideUp {
+  from {
+    transform: translateY(40px) scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* CLOSE BUTTON */
+.pv-close {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  background: transparent;
+  border: 1px solid var(--pv-border);
+  color: var(--pv-text);
+  font-size: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  z-index: 10;
+}
+
+.pv-close:hover {
+  background: var(--pv-danger);
+  border-color: transparent;
+  color: #000;
+  transform: rotate(90deg);
+}
+
+/* LEFT IMAGE PANEL */
+.pv-left {
+  width: 45%;
+  background: linear-gradient(135deg, #06131a, #0c1f2b);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 25px;
+  gap: 15px;
+  position: relative;
+}
+
+.pv-left::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(0, 229, 255, 0.15),
+    transparent
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.pv-left:hover::after {
+  opacity: 1;
+}
+
+.pv-left img {
+  max-width: 100%;
+  max-height: 280px;
+  border-radius: 18px;
+  object-fit: cover;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.pv-left:hover img {
+  transform: scale(1.05);
+  box-shadow: 0 30px 60px rgba(0, 229, 255, 0.4);
+}
+
+.pv-left input[type="file"] {
+  width: 100%;
+  background: var(--pv-card);
+  border: 1px dashed var(--pv-accent);
+  border-radius: 12px;
+  padding: 10px;
+  color: var(--pv-text);
+  cursor: pointer;
+}
+
+/* RIGHT CONTENT */
+.pv-right {
+  width: 55%;
+  padding: 35px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  color: var(--pv-text);
+}
+
+/* TEXT VIEW MODE */
+.pv-right h2 {
+  margin: 0;
+  color: var(--pv-accent);
+  font-size: 24px;
+  letter-spacing: 1px;
+}
+
+.pv-right p {
+  font-size: 14px;
+  color: var(--pv-muted);
+  margin: 4px 0;
+}
+
+.pv-right b {
+  color: var(--pv-text);
+}
+
+/* EDIT INPUTS */
+.pv-right input,
+.pv-right textarea {
+  width: 100%;
+  background: rgba(10, 18, 26, 0.8);
+  border: 1px solid var(--pv-border);
+  border-radius: 12px;
+  padding: 10px 14px;
+  color: var(--pv-text);
+  font-size: 14px;
+  transition: all 0.25s ease;
+}
+
+.pv-right textarea {
+  resize: none;
+  min-height: 90px;
+}
+
+.pv-right input:focus,
+.pv-right textarea:focus {
+  outline: none;
+  border-color: var(--pv-accent);
+  box-shadow: 0 0 12px var(--pv-accent-soft);
+}
+
+/* ACTION BUTTONS */
+.pv-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
+}
+
+.pv-actions button {
+  flex: 1;
+  background: linear-gradient(135deg, #00e5ff, #00b3cc);
+  border: none;
+  padding: 12px 0;
+  border-radius: 25px;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+}
+
+.pv-actions button:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 0 35px rgba(0, 229, 255, 0.7);
+}
+
+/* DELETE BUTTON */
+.pv-actions .danger {
+  background: linear-gradient(135deg, #ff4d4d, #ff1a1a);
+  color: #fff;
+  box-shadow: 0 0 20px rgba(255, 77, 77, 0.4);
+}
+
+.pv-actions .danger:hover {
+  box-shadow: 0 0 35px rgba(255, 77, 77, 0.7);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .pv-card {
+    flex-direction: column;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .pv-left,
+  .pv-right {
+    width: 100%;
+  }
+
+  .pv-right {
+    padding: 25px;
+  }
+}
