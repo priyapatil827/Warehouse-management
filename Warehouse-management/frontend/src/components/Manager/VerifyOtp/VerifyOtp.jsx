@@ -29,7 +29,7 @@ export default function VerifyOtp() {
 
         // 🔒 Redirect ONLY after verified
         setTimeout(() => {
-          navigate("/manager-dashboard");
+          navigate("/dashboard");
         }, 2000);
       } else {
         setToast({

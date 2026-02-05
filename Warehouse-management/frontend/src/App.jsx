@@ -6,13 +6,13 @@ import VerifyOtp from './components/Manager/VerifyOtp/VerifyOtp';
 import FirstPage from './components/FirstPage/FirstPage';
 import SelectPage from './components/Manager/SelectPage/selectPage';
 import Navbar from './components/Manager/Navbar/Navbar';
-import ManagerDashboard from './components/Manager/Dashboard/Dashboard';
+import Dashboard from './components/Manager/Dashboard/Dashboard';
 import Profile from './components/Manager/Profile/Profile';
 import ProductManagement from './components/Manager/Products/ProductManagement/ProductManagement';
 import StockControl from './components/Manager/StockControl/StockControl';
 import OrderManagement from './components/Manager/OrderManagement/OrderManagement';
 import Supplier from './components/Manager/Supplier/Supplier';
-import Employee from './components/Manager/Employee/Employee';
+// import Employee from './components/Manager/Employee/Employee';
 import Report from './components/Manager/Report/Report';
 import Setting from './components/Manager/Setting/Setting';
 import Employees from './components/Manager/EmployeeManagement/Employee/Employees';
@@ -30,7 +30,7 @@ function App() {
       <Route path='/dashboard' element={<Dashboard />}></Route>
       <Route path='/profile' element={<Profile />}></Route>
       <Route path='/product' element={<ProductManagement />}></Route>
-      <Route path='/stock-control' element={<StockControl />}></Route>
+   <Route path='/stock-control' element={<StockControl />}></Route>
       <Route path='/order' element={<OrderManagement />}></Route>
       <Route path='/supplier' element={<Supplier />}></Route>
       <Route path='/report' element={<Report />}></Route>
