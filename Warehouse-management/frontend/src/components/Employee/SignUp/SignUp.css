@@ -2,33 +2,32 @@
    COLOR PALETTE
 =========================== */
 :root {
-  --dark-teal: #132f38;            /* Background */
-  --white: #ffffff;                 /* Form panel */
-  --deep-blue: #0b1f2a;            /* Forest leaves / illustration */
-  --medium-teal: #1e5d66;          /* Foliage / accent */
-  --light-teal: #60b1b7;           /* Leaves highlight */
-  --very-light-aqua: #c5f1f5;      /* Background glow */
-  --blue-accent: #7ab9e8;          /* Character hand */
-  --button-dark: #39404f;          /* Button */
-  --google-red: #ea4335;           /* Google icon */
-  --ms-orange: #f25022;            /* Microsoft icon */
-  --link-teal: #55a6b1;            /* Text link / forgot password */
+  --dark-teal: #132f38;
+  --white: #ffffff;
+  --deep-blue: #0b1f2a;
+  --medium-teal: #1e5d66;
+  --light-teal: #60b1b7;
+  --very-light-aqua: #c5f1f5;
+  --blue-accent: #7ab9e8;
+  --button-dark: #39404f;
+  --google-red: #ea4335;
+  --link-teal: #55a6b1;
 }
 
 /* ===========================
-   ROOT & RESET
+   RESET
 =========================== */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: "Segoe UI", system-ui, sans-serif;
 }
 
 /* ===========================
    PAGE BACKGROUND
 =========================== */
-.signin-page {
+.signup-page {
   min-height: 100vh;
   display: flex;
   justify-content: center;
@@ -38,8 +37,8 @@
   overflow: hidden;
 }
 
-/* TOP RIGHT BLOB */
-.signin-page::before {
+/* BACKGROUND BLOBS */
+.signup-page::before {
   content: "";
   position: absolute;
   width: 420px;
@@ -49,11 +48,9 @@
   right: -140px;
   border-radius: 50%;
   opacity: 0.35;
-  z-index: 0;
 }
 
-/* BOTTOM LEFT BLOB */
-.signin-page::after {
+.signup-page::after {
   content: "";
   position: absolute;
   width: 520px;
@@ -63,13 +60,12 @@
   left: -200px;
   border-radius: 50%;
   opacity: 0.45;
-  z-index: 0;
 }
 
 /* ===========================
    WRAPPER
 =========================== */
-.signin-wrapper {
+.signup-wrapper {
   width: 100%;
   max-width: 900px;
   min-height: 520px;
@@ -96,7 +92,6 @@
   position: relative;
 }
 
-/* CURVE SHAPE */
 .welcome-panel::before {
   content: "";
   position: absolute;
@@ -119,14 +114,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 22px;
+  font-size: 18px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
   z-index: 2;
 }
 
 /* TEXT */
 .welcome-panel h1 {
-  font-size: 32px;
+  font-size: 30px;
   margin-top: 40px;
   z-index: 2;
 }
@@ -137,21 +132,6 @@
   opacity: 0.9;
   max-width: 320px;
   z-index: 2;
-}
-
-/* AVATARS */
-.avatars {
-  display: flex;
-  gap: 10px;
-  z-index: 2;
-}
-
-.avatars img {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  border: 2px solid var(--white);
-  object-fit: cover;
 }
 
 /* ===========================
@@ -168,7 +148,7 @@
 
 /* TITLES */
 .form-panel h2 {
-  font-size: 28px;
+  font-size: 26px;
   margin-bottom: 6px;
   color: var(--button-dark);
 }
@@ -242,53 +222,6 @@
 }
 
 /* ===========================
-   DIVIDER
-=========================== */
-.divider {
-  display: flex;
-  align-items: center;
-  margin: 30px 0;
-}
-
-.divider span {
-  font-size: 13px;
-  color: var(--button-dark);
-  padding: 0 10px;
-}
-
-.divider::before,
-.divider::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: var(--light-teal);
-}
-
-/* ===========================
-   SOCIAL
-=========================== */
-.social-login {
-  display: flex;
-  gap: 12px;
-}
-
-.social-login button {
-  flex: 1;
-  padding: 12px;
-  border-radius: 10px;
-  border: 1px solid var(--light-teal);
-  background: var(--white);
-  cursor: pointer;
-  font-weight: 600;
-  transition: 0.2s;
-}
-
-.social-login button:hover {
-  background: var(--very-light-aqua);
-  border-color: var(--medium-teal);
-}
-
-/* ===========================
    TOAST
 =========================== */
 .toast {
@@ -328,7 +261,7 @@
    RESPONSIVE
 =========================== */
 @media (max-width: 768px) {
-  .signin-wrapper {
+  .signup-wrapper {
     flex-direction: column;
   }
 
@@ -339,49 +272,4 @@
   .form-panel {
     padding: 40px;
   }
-}
-
-/* ===== UNIQUE FORGOT SECTION ===== */
-
-.forgot-wrapper {
-  margin-top: 18px;
-  text-align: center;
-}
-
-.forgot-divider {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-
-.forgot-divider span {
-  flex: 1;
-  height: 1px;
-  background: #ddd;
-}
-
-.forgot-divider p {
-  font-size: 13px;
-  color: gray;
-  margin: 0;
-}
-
-/* Stylish Button */
-.forgot-btn {
-  padding: 10px 18px;
-  border-radius: 30px;
-  border: none;
-  font-size: 14px;
-  font-weight: 600;
-  background: linear-gradient(135deg, #1e5d66, #60b1b7);
-  color: white;
-  cursor: pointer;
-  transition: 0.3s ease;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-}
-
-.forgot-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
 }

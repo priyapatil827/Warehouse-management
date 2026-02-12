@@ -10,6 +10,7 @@ import orderRouter from "./routes/orderRoutes.js";
 import profileRouter from "./routes/profileRoutes.js";
 import path from "path";
 import employeeRouter from "./routes/employeeRoutes.js";
+import supplierRouter from './routes/supplierRoutes.js'
 dotenv.config();
 
 const app = express();
@@ -31,6 +32,8 @@ app.use("/api/product", productRouter);
 app.use("/api/stock", stockRouter);
 app.use("/api/order", orderRouter);
 app.use("/api/employee", employeeRouter);
+app.use("/api/supplier", supplierRouter);
+
 
 app.listen(5050, () => {
   console.log("Server Started");

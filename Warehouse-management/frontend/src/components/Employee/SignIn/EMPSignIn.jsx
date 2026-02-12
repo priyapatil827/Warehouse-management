@@ -2,44 +2,53 @@ import React, { useState } from "react";
 import axios from "axios";
 import { base_uri } from "../../../api/api.js";
 import { useNavigate } from "react-router-dom";
-import "./SignIn.css";
+import "./EMPSignIn.css";
 
-export default function SignIn() {
+export default function EMPSignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [toast, setToast] = useState({ show: false, message: "", type: "" });
   const navigate = useNavigate();
 
-  const handleSignin = async () => {
+  const handleSignIn = async () => {
+    if (!email || !password) {
+      setToast({
+        show: true,
+        message: "Please fill all fields ❌",
+        type: "error",
+      });
+      return;
+    }
+
     try {
-      const res = await axios.post(`${base_uri}/auth/signin`, {
+      const res = await axios.post(`${base_uri}/employee/login`, {
         email,
         password,
       });
 
       if (res.data.status === true) {
-        localStorage.setItem("email", email);
+        localStorage.setItem("employee", JSON.stringify(res.data.employee));
 
         setToast({
           show: true,
-          message: res.data.message || "OTP Sent Successfully 📩",
+          message: "Employee Login Successful 🎉",
           type: "success",
         });
 
         setTimeout(() => {
-          navigate("/verify-otp");
-        }, 2000);
+          navigate("/employee-dashboard");
+        }, 1500);
       } else {
         setToast({
           show: true,
-          message: res.data.message || "Signin Failed ❌",
+          message: res.data.message || "Invalid Credentials ❌",
           type: "error",
         });
       }
-    } catch (err) {
+    } catch (error) {
       setToast({
         show: true,
-        message: "Server error ❌ Try again",
+        message: "Server Error ❌ Try again",
         type: "error",
       });
     }
@@ -52,32 +61,40 @@ export default function SignIn() {
   return (
     <div className="signin-page">
       <div className="signin-wrapper">
+
+        {/* LEFT PANEL */}
         <div className="welcome-panel">
-          <div className="logo">WH</div>
-          <h1>Welcome to Warehouse Manager</h1>
+          <div className="logo">EMP</div>
+
+          <h1>Employee Portal</h1>
           <p>
-            Manage inventory, track stock, and streamline warehouse operations
-            all in one place.
+            Sign in to access your assigned tasks, stock updates,
+            and warehouse operations dashboard.
           </p>
         </div>
 
+        {/* RIGHT PANEL */}
         <div className="form-panel">
-          <h2>Warehouse Sign In</h2>
+          <h2>Employee Sign In</h2>
           <p className="subtext">
-            New here?{" "}
-            <span onClick={() => navigate("/signup")}>Register Account</span>
+            Don’t have an account?{" "}
+            <span onClick={() => navigate("/employee-signup")}>
+              Create Account
+            </span>
           </p>
 
+          {/* Email */}
           <div className="form-field">
             <label>Email</label>
             <input
               type="email"
-              placeholder="manager@warehouse.com"
+              placeholder="employee@warehouse.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 
+          {/* Password */}
           <div className="form-field">
             <label>Password</label>
             <input
@@ -88,30 +105,17 @@ export default function SignIn() {
             />
           </div>
 
-          {/* ✨ UNIQUE FORGOT PASSWORD SECTION */}
-          <div className="forgot-wrapper">
-            <div className="forgot-divider">
-              <span></span>
-              <p>Trouble signing in?</p>
-              <span></span>
-            </div>
-
-            <button
-              className="forgot-btn"
-              onClick={() => navigate("/forget-password")}
-            >
-              🔐 Forget Password
-            </button>
-          </div>
-
-          <button className="signin-btn" onClick={handleSignin}>
+          <button className="signin-btn" onClick={handleSignIn}>
             Sign In
           </button>
         </div>
       </div>
 
+      {/* TOAST */}
       {toast.show && (
-        <div className={`toast ${toast.type}`}>{toast.message}</div>
+        <div className={`toast ${toast.type}`}>
+          {toast.message}
+        </div>
       )}
     </div>
   );

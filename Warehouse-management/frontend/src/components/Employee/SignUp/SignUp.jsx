@@ -2,37 +2,37 @@ import React, { useState } from "react";
 import axios from "axios";
 import { base_uri } from "../../../api/api.js";
 import { useNavigate } from "react-router-dom";
-import "./SignIn.css";
+import "./SignUp.css";
 
-export default function SignIn() {
+export default function EmployeeSignUp() {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [toast, setToast] = useState({ show: false, message: "", type: "" });
   const navigate = useNavigate();
 
-  const handleSignin = async () => {
+  const handleSignup = async () => {
     try {
-      const res = await axios.post(`${base_uri}/auth/signin`, {
+      const res = await axios.post(`${base_uri}/employee/signup`, {
+        name,
         email,
         password,
       });
 
-      if (res.data.status === true) {
-        localStorage.setItem("email", email);
-
+      if (res.data.status === true || res.data.message) {
         setToast({
           show: true,
-          message: res.data.message || "OTP Sent Successfully 📩",
+          message: res.data.message || "Employee Signup Successful 🎉",
           type: "success",
         });
 
         setTimeout(() => {
-          navigate("/verify-otp");
+          navigate("/employee-signin");
         }, 2000);
       } else {
         setToast({
           show: true,
-          message: res.data.message || "Signin Failed ❌",
+          message: res.data.message || "Signup Failed ❌",
           type: "error",
         });
       }
@@ -50,66 +50,69 @@ export default function SignIn() {
   };
 
   return (
-    <div className="signin-page">
-      <div className="signin-wrapper">
+    <div className="signup-page">
+      <div className="signup-wrapper">
+        {/* LEFT PANEL */}
         <div className="welcome-panel">
-          <div className="logo">WH</div>
-          <h1>Welcome to Warehouse Manager</h1>
+          <div className="logo">EMP</div>
+
+          <h1>Create Employee Account</h1>
           <p>
-            Manage inventory, track stock, and streamline warehouse operations
-            all in one place.
+            Register as an employee to manage assigned tasks, track inventory,
+            and monitor daily warehouse operations efficiently.
           </p>
         </div>
 
+        {/* RIGHT PANEL */}
         <div className="form-panel">
-          <h2>Warehouse Sign In</h2>
+          <h2>Employee Sign Up</h2>
           <p className="subtext">
-            New here?{" "}
-            <span onClick={() => navigate("/signup")}>Register Account</span>
+            Already have an account?{" "}
+            <span onClick={() => navigate("/employee-signin")}>
+              Sign In
+            </span>
           </p>
 
+          {/* Name Field */}
+          <div className="form-field">
+            <label>Full Name</label>
+            <input
+              type="text"
+              placeholder="Enter employee name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+
+          {/* Email Field */}
           <div className="form-field">
             <label>Email</label>
             <input
               type="email"
-              placeholder="manager@warehouse.com"
+              placeholder="employee@warehouse.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 
+          {/* Password Field */}
           <div className="form-field">
             <label>Password</label>
             <input
               type="password"
-              placeholder="Enter your password"
+              placeholder="Create a strong password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
 
-          {/* ✨ UNIQUE FORGOT PASSWORD SECTION */}
-          <div className="forgot-wrapper">
-            <div className="forgot-divider">
-              <span></span>
-              <p>Trouble signing in?</p>
-              <span></span>
-            </div>
-
-            <button
-              className="forgot-btn"
-              onClick={() => navigate("/forget-password")}
-            >
-              🔐 Forget Password
-            </button>
-          </div>
-
-          <button className="signin-btn" onClick={handleSignin}>
-            Sign In
+          <button className="signin-btn" onClick={handleSignup}>
+            Create Employee Account
           </button>
         </div>
       </div>
 
+      {/* TOAST */}
       {toast.show && (
         <div className={`toast ${toast.type}`}>{toast.message}</div>
       )}

@@ -18,7 +18,7 @@
 /* PAGE */
 .emp-page {
   min-height: 100vh;
-  background: radial-gradient(circle at top right, #1e5d66, #132f38);
+  background: radial-gradient(circle at top right, #014049, #132f38);
   /* padding: 30px; */
   color: var(--white);
   font-family: "Segoe UI", sans-serif;

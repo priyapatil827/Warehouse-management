@@ -7,12 +7,14 @@ export default function Profile() {
   const [currentUser, setCurrentUser] = useState({});
   const [totalProducts, setTotalProducts] = useState(0);
   const [totalEmployees, setTotalEmployees] = useState(0);
+    const [totalSuppliers, setTotalSuppliers] = useState(0);
   const [activeTab, setActiveTab] = useState("profile");
 
   //  LOAD DATA ON PAGE LOAD
   useEffect(() => {
     getCurrentUser();
     getEmployeeCount();
+    getSupplierCount();
 
     const count = localStorage.getItem("totalProducts");
     if (count) setTotalProducts(count);
@@ -59,6 +61,25 @@ export default function Profile() {
     }
   };
 
+  // ✅ FETCH SUPPLIER COUNT
+  const getSupplierCount = async () => {
+    try {
+      const res = await axios.get(
+        `${base_uri}/supplier/getAll`
+      );
+
+      if (Array.isArray(res.data.suppliers)) {
+        setTotalSuppliers(res.data.suppliers.length);
+      } else if (Array.isArray(res.data)) {
+        setTotalSuppliers(res.data.length);
+      } else {
+        setTotalSuppliers(0);
+      }
+    } catch (err) {
+      setTotalSuppliers(0);
+    }
+  };
+
   //  SAVE PROFILE
   const handleSaveProfile = async () => {
     try {
@@ -95,7 +116,7 @@ export default function Profile() {
           {/*  LIVE STATS */}
           <div className="header-stats">
             <span>📦 {totalProducts} Products</span>
-            <span>🚚 0 Suppliers</span>
+            <span>🚚 {totalSuppliers} Suppliers</span>
             <span>👥 {totalEmployees} Employees</span>
           </div>
         </div>

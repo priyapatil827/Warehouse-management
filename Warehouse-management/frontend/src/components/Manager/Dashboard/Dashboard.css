@@ -1,205 +1,183 @@
-/* ================= ROOT COLORS ================= */
 :root {
-  --dark-teal: #132f38;
+  --primary: #1e5d66;
+  --secondary: #60b1b7;
+  --dark: #0b1f2a;
+  --bg-dark: #071a24;
+  --glass: rgba(255, 255, 255, 0.08);
   --white: #ffffff;
-  --deep-blue: #0b1f2a;
-  --medium-teal: #1e5d66;
-  --light-teal: #60b1b7;
-  --very-light-aqua: #c5f1f5;
-  --blue-accent: #7ab9e8;
-  --button-dark: #39404f;
-  --google-red: #ea4335;
-  --link-teal: #55a6b1;
+  --danger: #ff4d4d;
 }
 
-/* ================= PAGE ================= */
-.dashboard-page {
+/* ===== PAGE ===== */
+.warehouse-page {
   min-height: 100vh;
-  background: radial-gradient(circle at top, #1b4650, var(--dark-teal));
+  background: linear-gradient(135deg, #0f2f38, var(--bg-dark));
+  font-family: "Segoe UI", sans-serif;
+  color: var(--white);
+  overflow-x: hidden;
 }
 
-/* ================= GRID ================= */
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 24px;
-  padding: 24px;
+/* ================= HERO SECTION ================= */
+.hero-carousel {
+  position: relative;
+  width: 100%;
+  height: 420px;
+  overflow: hidden;
 }
 
-/* ================= CARD BASE ================= */
-.card {
-  background: var(--white);
-  border-radius: 18px;
-  padding: 22px;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
+.hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  animation: zoomEffect 8s ease-in-out infinite alternate;
 }
 
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 25px 55px rgba(0, 0, 0, 0.35);
+/* Smooth Zoom */
+@keyframes zoomEffect {
+  from { transform: scale(1); }
+  to { transform: scale(1.05); }
 }
 
-/* ================= LARGE CARD ================= */
-.card.large {
-  grid-column: span 2;
-}
-
-/* ================= HEADER ================= */
-.card-header {
+/* Overlay */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.75),
+    rgba(0, 0, 0, 0.4)
+  );
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 70px;
+}
+
+.hero-overlay h1 {
+  font-size: 46px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.hero-overlay p {
+  font-size: 18px;
+  opacity: 0.9;
+}
+
+/* ================= KPI GRID ================= */
+.kpi-grid {
+  padding: 50px 60px 30px 60px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 25px;
+}
+
+/* ================= KPI CARD ================= */
+.kpi-card {
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  padding: 25px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: 0.4s ease;
+}
+
+.kpi-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+.kpi-card h3 {
+  font-size: 15px;
+  opacity: 0.8;
+}
+
+.kpi-card h2 {
+  font-size: 28px;
+  margin-top: 8px;
+}
+
+.danger {
+  color: var(--danger);
+}
+
+/* ================= CARD SECTION ================= */
+.card {
+  margin: 20px 60px;
+  padding: 25px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 18px;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .card h3 {
-  font-size: 18px;
-  color: var(--deep-blue);
-  margin: 0;
+  margin-bottom: 20px;
 }
 
-.card h4 {
-  margin: 0;
+/* ================= PROGRESS ================= */
+.progress-item {
+  margin-bottom: 18px;
 }
 
-/* ================= BADGES ================= */
-.badge-group span {
-  padding: 6px 14px;
-  border-radius: 999px;
-  background: var(--very-light-aqua);
-  color: var(--medium-teal);
-  font-size: 13px;
-  cursor: pointer;
-  margin-left: 6px;
+.progress-item p {
+  margin-bottom: 6px;
+  font-size: 14px;
+  opacity: 0.85;
 }
 
-.badge-group .active {
-  background: var(--medium-teal);
-  color: var(--white);
+.progress-bar {
+  width: 100%;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  overflow: hidden;
 }
 
-/* ================= STAT CARDS ================= */
-.card.donut {
+.progress-bar div {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  border-radius: 20px;
+  transition: width 0.6s ease;
+}
+
+.low-bar {
+  background: var(--danger) !important;
+}
+
+/* ================= FOOTER ================= */
+footer {
+  margin-top: 50px;
   text-align: center;
-}
-
-.card.donut h2 {
-  font-size: 34px;
-  margin: 8px 0;
-}
-
-.muted {
-  color: #6b8a94;
-  font-size: 13px;
-}
-
-.muted-light {
-  color: rgba(255, 255, 255, 0.85);
-  font-size: 13px;
-}
-
-/* ================= COLOR VARIANTS ================= */
-.card.cyan {
-  background: linear-gradient(135deg, var(--medium-teal), var(--light-teal));
-  color: var(--white);
-}
-
-.card.orange {
-  background: linear-gradient(135deg, var(--button-dark), var(--deep-blue));
-  color: var(--white);
-}
-
-.card.cyan h2,
-.card.orange h2,
-.card.cyan h4,
-.card.orange h4 {
-  color: var(--white);
-}
-
-/* ================= DONUT + LEGEND ================= */
-.donut-flex {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 22px;
-  margin-top: 14px;
-}
-
-/* DONUT */
-.donut-wrapper {
-  position: relative;
-  width: 240px;
-  height: 240px;
-}
-
-/* CENTER TEXT */
-.donut-center-text {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-}
-
-.donut-center-text h2 {
-  font-size: 34px;
-  font-weight: 700;
-  color: var(--deep-blue);
-  margin: 0;
-}
-
-.donut-center-text span {
+  padding: 25px 0;
   font-size: 14px;
-  color: #6b8a94;
-}
-
-/* ================= LEGEND ================= */
-.donut-legend {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--deep-blue);
-}
-
-.legend-color {
-  width: 14px;
-  height: 14px;
-  border-radius: 4px;
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
-}
-
-.legend-text {
-  white-space: nowrap;
-}
-
-/* ================= TOOLTIP ================= */
-.recharts-tooltip-wrapper {
-  font-size: 13px;
+  opacity: 0.7;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 /* ================= RESPONSIVE ================= */
 @media (max-width: 768px) {
-  .card.large {
-    grid-column: span 1;
+  .hero-carousel {
+    height: 260px;
   }
 
-  .donut-flex {
-    flex-direction: column;
+  .hero-overlay {
+    padding-left: 25px;
   }
 
-  .donut-legend {
-    align-items: center;
+  .hero-overlay h1 {
+    font-size: 26px;
+  }
+
+  .hero-overlay p {
+    font-size: 14px;
+  }
+
+  .kpi-grid {
+    padding: 30px 20px;
+  }
+
+  .card {
+    margin: 20px;
   }
 }

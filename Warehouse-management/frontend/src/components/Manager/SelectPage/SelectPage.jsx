@@ -26,7 +26,7 @@ export default function SelectRole() {
           {/* Employee */}
           <div
             className="role-card"
-            onClick={() => navigate("/employee-login")}
+            onClick={() => navigate("/employee-signin")}
           >
             <div className="role-icon">
               <FaUsers />

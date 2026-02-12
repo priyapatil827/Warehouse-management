@@ -117,8 +117,9 @@
 }
 
 .pm-table tbody tr {
-  background: var(--card-bg);
+  background: rgba(20, 32, 42, 0.85);
   transition: 0.25s ease;
+
 }
 
 .pm-table tbody tr:hover {

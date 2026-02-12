@@ -1,237 +1,169 @@
-// ================= IMPORTS =================
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import "./Dashboard.css";
 import Navbar from "../Navbar/Navbar";
 import { base_uri } from "../../../api/api";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-} from "recharts";
-import "./Dashboard.css";
 
-// ================= COLORS =================
-const COLORS = [
-  "#6c63ff",
-  "#00c9a7",
-  "#ff7a45",
-  "#ffcc00",
-  "#36a2eb",
-  "#9b59b6",
+const carouselImages = [
+  "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d",
+  "https://images.unsplash.com/photo-1590496793929-36417d3117de",
+  "https://plus.unsplash.com/premium_photo-1681426745230-fdb319df08fa",
 ];
 
-// ================= EARNING DUMMY =================
-const earningsData = [
-  { month: "Jan", earning: 200, payment: 150 },
-  { month: "Feb", earning: 400, payment: 300 },
-  { month: "Mar", earning: 800, payment: 900 },
-  { month: "Apr", earning: 700, payment: 500 },
-  { month: "May", earning: 600, payment: 450 },
-  { month: "Jun", earning: 750, payment: 600 },
-];
+export default function WarehouseDashboard() {
+  const [current, setCurrent] = useState(0);
+  const [products, setProducts] = useState([]);
 
-// ================= COMPONENT =================
-export default function ManagerDashboard() {
-  const [productStock, setProductStock] = useState([]);
-  const [employeeData, setEmployeeData] = useState([]);
-  const [salaryData, setSalaryData] = useState([]);
-
+  // 🔥 AUTO SLIDER
   useEffect(() => {
-    fetchProductStock();
-    fetchEmployees();
+    const interval = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % carouselImages.length);
+    }, 3500);
+    return () => clearInterval(interval);
   }, []);
 
-  // ================= PRODUCT STOCK =================
-  const fetchProductStock = async () => {
-    const res = await axios.get(
-      `${base_uri}/product/getAllProducts`,
-      { withCredentials: true }
-    );
+  // 🔥 FETCH PRODUCTS
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
-    const map = {};
-    res.data.products?.forEach((p) => {
-      map[p.category || "Other"] =
-        (map[p.category || "Other"] || 0) + (p.stock || 0);
-    });
-
-    setProductStock(
-      Object.keys(map).map((k) => ({ name: k, value: map[k] }))
-    );
+  const fetchProducts = async () => {
+    try {
+      const res = await axios.get(`${base_uri}/product/getAllProducts`, {
+        withCredentials: true,
+      });
+      setProducts(res.data.products || []);
+    } catch (err) {
+      console.log("Dashboard fetch error:", err);
+    }
   };
 
-  // ================= EMPLOYEE + SALARY =================
-  const fetchEmployees = async () => {
-    const res = await axios.get(`${base_uri}/employee/get-employee`);
+  // 🔥 CALCULATIONS
+  const totalProducts = products.length;
 
-    const employees =
-      res.data.employees || res.data.data || res.data || [];
+  const totalStock = products.reduce(
+    (sum, p) => sum + Number(p.stock || 0),
+    0
+  );
 
-    const deptCount = {};
-    const deptSalary = {};
+  const lowStock = products.filter((p) => p.stock < 50).length;
 
-    employees.forEach((e) => {
-      const dept = e.department || "Other";
-      const salary = Number(e.salary || 0);
+  const healthyStock = products.filter((p) => p.stock >= 50).length;
 
-      deptCount[dept] = (deptCount[dept] || 0) + 1;
-      deptSalary[dept] = (deptSalary[dept] || 0) + salary;
-    });
+  const totalRevenue = products.reduce(
+    (sum, p) => sum + Number(p.price || 0) * Number(p.stock || 0),
+    0
+  );
 
-    setEmployeeData(
-      Object.keys(deptCount).map((k) => ({
-        name: k,
-        value: deptCount[k],
-      }))
-    );
-
-    setSalaryData(
-      Object.keys(deptSalary).map((k) => ({
-        department: k,
-        salary: deptSalary[k],
-      }))
-    );
-  };
-
-  const totalStock = productStock.reduce((s, i) => s + i.value, 0);
-  const totalEmployees = employeeData.reduce((s, i) => s + i.value, 0);
+  // 🔥 CATEGORY STOCK
+  const categoryStock = {};
+  products.forEach((p) => {
+    const cat = p.category || "Other";
+    categoryStock[cat] =
+      (categoryStock[cat] || 0) + Number(p.stock || 0);
+  });
 
   return (
-    <div className="dashboard-page">
+    <div className="warehouse-page">
       <Navbar />
 
-      <div className="dashboard-grid">
-        {/* ===== TOP CARDS ===== */}
-        <div className="card donut cyan">
-          <h4>Total Categories</h4>
-          <h2>{productStock.length}</h2>
-          <p className="muted-light">Live</p>
-        </div>
-
-        <div className="card donut orange">
-          <h4>Total Stock</h4>
-          <h2>{totalStock}</h2>
-          <p className="muted-light">Inventory</p>
-        </div>
-
-        <div className="card donut orange">
-          <h4>Total Employee</h4>
-          <h2>{totalEmployees}</h2>
-          <p className="muted-light">Total Employees</p>
-        </div>
-
-        {/* ===== EARNING GRAPH ===== */}
-        <div className="card large">
-          <h3>Earning Reports</h3>
-
-          <ResponsiveContainer width="100%" height={260}>
-            <LineChart data={earningsData}>
-              <XAxis dataKey="month" />
-              <YAxis />
-              <Tooltip />
-              <Line dataKey="earning" stroke="#6c63ff" strokeWidth={3} />
-              <Line dataKey="payment" stroke="#ff7a45" strokeWidth={3} />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-
-        {/* ===== PRODUCT STOCK DONUT ===== */}
-        <div className="card donut">
-          <h3>Product Stock</h3>
-          <p className="muted">Category wise</p>
-
-          <div className="donut-flex">
-            <PieChart width={240} height={240}>
-              <Pie
-                data={productStock}
-                dataKey="value"
-                innerRadius={70}
-                outerRadius={100}
-              >
-                {productStock.map((_, i) => (
-                  <Cell key={i} fill={COLORS[i % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-
-            <div className="donut-legend">
-              {productStock.map((i, idx) => (
-                <div className="legend-item" key={idx}>
-                  <span
-                    className="legend-color"
-                    style={{ background: COLORS[idx % COLORS.length] }}
-                  />
-                  {i.name} ({i.value})
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* ===== EMPLOYEE COUNT DONUT ===== */}
-        <div className="card donut">
-          <h3>Employees Overview</h3>
-          <p className="muted">Department wise count</p>
-
-          <div className="donut-flex">
-            <PieChart width={240} height={240}>
-              <Pie
-                data={employeeData}
-                dataKey="value"
-                innerRadius={70}
-                outerRadius={100}
-              >
-                {employeeData.map((_, i) => (
-                  <Cell key={i} fill={COLORS[i % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-
-            <div className="donut-legend">
-              {employeeData.map((i, idx) => (
-                <div className="legend-item" key={idx}>
-                  <span
-                    className="legend-color"
-                    style={{ background: COLORS[idx % COLORS.length] }}
-                  />
-                  {i.name} ({i.value})
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <h4 style={{ marginTop: 12 }}>
-            Total Employees: {totalEmployees}
-          </h4>
-        </div>
-
-        {/* ===== SALARY GRAPH ===== */}
-        <div className="card large">
-          <h3>Salary Distribution</h3>
-          <p className="muted">Department wise total salary</p>
-
-          <ResponsiveContainer width="100%" height={280}>
-            <LineChart data={salaryData}>
-              <XAxis dataKey="department" />
-              <YAxis />
-              <Tooltip />
-              <Line
-                type="monotone"
-                dataKey="salary"
-                stroke="#00c9a7"
-                strokeWidth={3}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+      {/* HERO */}
+      <div className="hero-carousel">
+        <img
+          src={carouselImages[current]}
+          alt="warehouse"
+          className="hero-image"
+        />
+        <div className="hero-overlay">
+          <h1>Warehouse Management System</h1>
+          <p>Track • Manage • Optimize Inventory</p>
         </div>
       </div>
+
+      {/* KPI CARDS */}
+      <div className="kpi-grid">
+        <div className="kpi-card">
+          <h3>Total Products</h3>
+          <h2>{totalProducts}</h2>
+        </div>
+
+        <div className="kpi-card">
+          <h3>Total Stock</h3>
+          <h2>{totalStock}</h2>
+        </div>
+
+        <div className="kpi-card">
+          <h3>Low Stock Items</h3>
+          <h2 className="danger">{lowStock}</h2>
+        </div>
+
+        <div className="kpi-card">
+          <h3>Total Inventory Value</h3>
+          <h2>₹{totalRevenue.toLocaleString()}</h2>
+        </div>
+      </div>
+
+      {/* CATEGORY STOCK */}
+      <div className="card">
+        <h3>Category Wise Stock</h3>
+
+        {Object.keys(categoryStock).map((cat) => {
+          const percent =
+            totalStock > 0
+              ? Math.round((categoryStock[cat] / totalStock) * 100)
+              : 0;
+
+          return (
+            <div className="progress-item" key={cat}>
+              <p>
+                {cat} ({categoryStock[cat]} pcs)
+              </p>
+              <div className="progress-bar">
+                <div style={{ width: `${percent}%` }}></div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* INVENTORY HEALTH */}
+      <div className="card">
+        <h3>Inventory Health</h3>
+
+        <div className="progress-item">
+          <p>Healthy Stock ({healthyStock})</p>
+          <div className="progress-bar">
+            <div
+              className="healthy-bar"
+              style={{
+                width:
+                  totalProducts > 0
+                    ? `${(healthyStock / totalProducts) * 100}%`
+                    : "0%",
+              }}
+            ></div>
+          </div>
+        </div>
+
+        <div className="progress-item">
+          <p>Low Stock ({lowStock})</p>
+          <div className="progress-bar">
+            <div
+              className="low-bar"
+              style={{
+                width:
+                  totalProducts > 0
+                    ? `${(lowStock / totalProducts) * 100}%`
+                    : "0%",
+              }}
+            ></div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <p>© 2026 Warehouse Management System | Built with ❤️</p>
+      </footer>
     </div>
   );
 }

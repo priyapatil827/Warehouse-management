@@ -1,0 +1,113 @@
+/* Same palette */
+:root {
+  --dark-teal: #132f38;
+  --white: #ffffff;
+  --deep-blue: #0b1f2a;
+  --medium-teal: #1e5d66;
+  --light-teal: #60b1b7;
+  --very-light-aqua: #c5f1f5;
+  --blue-accent: #7ab9e8;
+  --button-dark: #39404f;
+  --google-red: #ea4335;
+  --link-teal: #55a6b1;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+.signin-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--dark-teal);
+  position: relative;
+  overflow: hidden;
+}
+
+.signin-wrapper {
+  width: 100%;
+  max-width: 900px;
+  min-height: 520px;
+  background: var(--white);
+  border-radius: 22px;
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.12);
+  display: flex;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.welcome-panel {
+  flex: 1;
+  padding: 50px;
+  background: linear-gradient(160deg, var(--light-teal), var(--medium-teal));
+  color: var(--deep-blue);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.logo {
+  width: 52px;
+  height: 52px;
+  background: var(--white);
+  color: var(--medium-teal);
+  border-radius: 14px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-panel {
+  flex: 1;
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.form-field input {
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--light-teal);
+}
+
+.signin-btn {
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, var(--medium-teal), var(--button-dark));
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  padding: 14px 20px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.toast.success {
+  background: var(--medium-teal);
+  color: white;
+}
+
+.toast.error {
+  background: var(--google-red);
+  color: white;
+}

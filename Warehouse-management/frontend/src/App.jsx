@@ -2,7 +2,7 @@ import './App.css'
 import { Routes, Route } from "react-router-dom";
 import SignUp from './components/Manager/SignUp/SignUp'
 import SignIn from './components/Manager/SignIn/SignIn'
-import VerifyOtp from './components/Manager/VerifyOtp/VerifyOtp';
+import VerifyOtp from './components/VerifyOtp/VerifyOtp';
 import FirstPage from './components/FirstPage/FirstPage';
 import SelectPage from './components/Manager/SelectPage/selectPage';
 import Navbar from './components/Manager/Navbar/Navbar';
@@ -16,6 +16,9 @@ import Supplier from './components/Manager/Supplier/Supplier';
 import Report from './components/Manager/Report/Report';
 import Setting from './components/Manager/Setting/Setting';
 import Employees from './components/Manager/EmployeeManagement/Employee/Employees';
+import ForgetPassword from './components/ForgetPassword/ForgetPassword';
+import ChangePassword from './components/ChangePassword/ChangePassword';
+import EMPSignIn from './components/Employee/SignIn/EMPSignIn';
 // import AddProduct from './components/Manager/AddProduct/AddProduct';
 
 function App() {
@@ -30,12 +33,14 @@ function App() {
       <Route path='/dashboard' element={<Dashboard />}></Route>
       <Route path='/profile' element={<Profile />}></Route>
       <Route path='/product' element={<ProductManagement />}></Route>
-   <Route path='/stock-control' element={<StockControl />}></Route>
+      <Route path='/stock-control' element={<StockControl />}></Route>
       <Route path='/order' element={<OrderManagement />}></Route>
       <Route path='/supplier' element={<Supplier />}></Route>
       <Route path='/report' element={<Report />}></Route>
       <Route path='/setting' element={<Setting />}></Route>
       <Route path='/employees' element={<Employees />}></Route>
+      <Route path='/forget-password' element={<ForgetPassword />}></Route>
+      <Route path='/employee-signin' element={<EMPSignIn />}></Route>
     </Routes>
   )
 }

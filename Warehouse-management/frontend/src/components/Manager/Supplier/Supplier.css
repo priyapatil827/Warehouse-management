@@ -1,0 +1,151 @@
+.sup-page {
+  min-height: 100vh;
+  background: #0b141a;
+  color: #e6f1f5;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.sup-container {
+  padding: 40px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+/* Top Section */
+.sup-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.sup-top h2 {
+  font-size: 26px;
+  font-weight: 600;
+}
+
+.sup-top input {
+  padding: 10px 18px;
+  border-radius: 25px;
+  background: #12202a;
+  border: 1px solid rgba(255,255,255,0.1);
+  color: white;
+  outline: none;
+  transition: 0.3s;
+  width: 240px;
+}
+
+.sup-top input:focus {
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+/* Form Section */
+.sup-form {
+  background: #12202a;
+  padding: 22px;
+  border-radius: 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.sup-form input,
+.sup-form select {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: #162833;
+  color: white;
+  outline: none;
+  transition: 0.2s;
+}
+
+.sup-form input:focus,
+.sup-form select:focus {
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+.sup-form button {
+  grid-column: span 2;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background: #162833;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.sup-form button:hover {
+  background: #1d3442;
+  transform: translateY(-2px);
+}
+
+/* Table Section */
+.sup-table-wrapper {
+  background: #12202a;
+  padding: 25px;
+  border-radius: 16px;
+}
+
+.sup-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px;
+}
+
+.sup-table th {
+  text-align: left;
+  color: #9fb4c4;
+  font-weight: 500;
+  padding-bottom: 10px;
+}
+
+.sup-table tbody tr {
+  background: #162833;
+  transition: 0.2s;
+  border-radius: 12px;
+}
+
+.sup-table tbody tr:hover {
+  background: #1d3442;
+}
+
+.sup-table td {
+  padding: 14px 12px;
+}
+
+/* Status Badge */
+.status {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.status.active {
+  color: #1aff7c;
+}
+
+.status.inactive {
+  color: #ff4d4d;
+}
+
+/* Action Buttons */
+.sup-table button {
+  padding: 6px 12px;
+  margin-right: 8px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  transition: 0.2s;
+  background: #12202a;
+  color: white;
+}
+
+.sup-table button:hover {
+  background: #1d3442;
+}
