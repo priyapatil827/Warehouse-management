@@ -6,7 +6,8 @@ import {
   deleteProduct,
   editProduct,
   getAllProducts,
-  getProductById
+  getProductById,
+  updateStock
 } from "../controllers/productControllers.js";
 
 const productRouter = express.Router();
@@ -39,5 +40,6 @@ productRouter.put("/editProduct/:id", upload.single("image"), editProduct);
 productRouter.delete("/deleteProduct/:id", deleteProduct);
 productRouter.get("/getAllProducts", getAllProducts);
 productRouter.get("/getProductById/:id", getProductById);
+productRouter.post("/updateStock", updateStock);
 
 export default productRouter;

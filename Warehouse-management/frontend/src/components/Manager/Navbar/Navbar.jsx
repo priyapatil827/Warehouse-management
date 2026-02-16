@@ -30,12 +30,6 @@ export default function Navbar() {
           <Link to="/stock-control">Stock Control</Link>
         </li>
 
-        <li
-          className={`nav-item ${active === "Order" ? "active" : ""}`}
-          onClick={() => setActive("Order")}
-        >
-          <Link to="/order">Order</Link>
-        </li>
 
         <li
           className={`nav-item ${active === "Suppliers" ? "active" : ""}`}

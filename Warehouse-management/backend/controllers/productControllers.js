@@ -30,7 +30,7 @@ export const createProduct = async (req, res) => {
 
 // Edit Product
 export const editProduct = async (req, res) => {
-  const {  name, price, description, category, stock } = req.body;
+  const { name, price, description, category, stock } = req.body;
   const { id } = req.params;
   const image = req.file ? req.file.filename : null;
 
@@ -104,5 +104,38 @@ export const getProductById = async (req, res) => {
       message: "Get product by ID failed",
       error: err.message,
     });
+  }
+};
+
+// STOCK IN / OUT / ADJUST
+export const updateStock = async (req, res) => {
+  try {
+    const { productId, quantity, type } = req.body;
+
+    const product = await ProductModel.findById(productId);
+    if (!product) {
+      return res.json({ status: false, message: "Product not found" });
+    }
+
+    if (type === "in") {
+      product.stock += quantity;
+    }
+
+    if (type === "out") {
+      if (quantity > product.stock) {
+        return res.json({ status: false, message: "Not enough stock" });
+      }
+      product.stock -= quantity;
+    }
+
+    if (type === "adjust") {
+      product.stock += quantity; // can be + or -
+    }
+
+    await product.save();
+
+    res.json({ status: true, message: "Stock updated", product });
+  } catch (err) {
+    res.json({ status: false, message: err.message });
   }
 };

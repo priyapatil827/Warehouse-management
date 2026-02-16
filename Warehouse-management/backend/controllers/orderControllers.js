@@ -1,57 +1,63 @@
 import { OrderModel } from "../models/orderModels.js";
 import { ProductModel } from "../models/productModels.js";
+import { EmployeeModel } from "../models/employeModels.js";
 
-/*
-ORDER BODY:
-{
-  orderType: "CUSTOMER" | "SUPPLIER",
-  products: [
-    {
-      productId,
-      quantity,
-      price
-    }
-  ],
-  orderedBy
-}
-*/
 
-// Create Order
+// ================= CREATE ORDER =================
 export const createOrder = async (req, res) => {
   try {
     const { orderType, products, orderedBy } = req.body;
+
+    if (!orderType || !products?.length || !orderedBy) {
+      return res.json({
+        status: false,
+        message: "All fields required",
+      });
+    }
+
     let totalAmount = 0;
+    const updatedProducts = [];
+
     for (const item of products) {
       const product = await ProductModel.findById(item.productId);
+
       if (!product) {
         return res.json({
           status: false,
-          message: `Product with ID ${item.productId} not found`,
+          message: "Product not found",
         });
       }
-      if (orderType === "customer") {
-        if (product.stock < item.quantity) {
-          return res.json({
-            status: false,
-            message: `Not enough stock ${product.name}`,
-          });
-        }
+
+      if (orderType === "CUSTOMER" && product.stock < item.quantity) {
+        return res.json({
+          status: false,
+          message: `Not enough stock for ${product.name}`,
+        });
       }
 
       totalAmount += product.price * item.quantity;
+
+      updatedProducts.push({
+        productId: product._id,
+        quantity: item.quantity,
+        price: product.price,
+      });
     }
 
     const newOrder = new OrderModel({
       orderType,
-      product: products,
+      products: updatedProducts,
       totalAmount,
       orderedBy,
     });
 
-    for (const item of products) {
+    await newOrder.save();
+
+    // 🔥 Update Stock
+    for (const item of updatedProducts) {
       const product = await ProductModel.findById(item.productId);
 
-      if (orderType === "customer") {
+      if (orderType === "CUSTOMER") {
         product.stock -= item.quantity;
       } else {
         product.stock += item.quantity;
@@ -74,14 +80,19 @@ export const createOrder = async (req, res) => {
   }
 };
 
-// Get All Orders
+
+// ================= GET ALL ORDERS =================
 export const getAllOrders = async (req, res) => {
   try {
     const orders = await OrderModel.find()
-      .populate("product.productId", "name category price")
+      .populate("products.productId", "name price stock")
+      .populate("assignedEmployee", "name email")
       .sort({ createdAt: -1 });
 
-    res.json({ status: true, count: orders.length, orders });
+    res.json({
+      status: true,
+      orders,
+    });
   } catch (err) {
     res.json({
       status: false,
@@ -91,10 +102,12 @@ export const getAllOrders = async (req, res) => {
   }
 };
 
-// Update Order Status
+
+// ================= UPDATE STATUS =================
 export const updateOrderStatus = async (req, res) => {
-  const { orderId, status } = req.body;
   try {
+    const { orderId, status } = req.body;
+
     const order = await OrderModel.findById(orderId);
     if (!order) {
       return res.json({ status: false, message: "Order not found" });
@@ -105,37 +118,54 @@ export const updateOrderStatus = async (req, res) => {
 
     res.json({
       status: true,
-      message: "Order status updated successfully",
+      message: "Status updated successfully",
       order,
     });
   } catch (err) {
     res.json({
       status: false,
-      message: "Update order status failed",
+      message: "Update failed",
       error: err.message,
     });
   }
 };
 
-// Get Orders by user
-export const getOrdersByUser = async (req, res) => {
-  try {
-    const { orderedBy } = req.params;
 
-    const orders = await OrderModel.find({ orderedBy }).populate(
-      "products.productId",
-      "name category price",
-    );
+// ================= ASSIGN EMPLOYEE =================
+export const assignEmployee = async (req, res) => {
+  try {
+    const { orderId, employeeId } = req.body;
+
+    const order = await OrderModel.findById(orderId);
+    if (!order) {
+      return res.json({
+        status: false,
+        message: "Order not found",
+      });
+    }
+
+    const employee = await EmployeeModel.findById(employeeId);
+    if (!employee) {
+      return res.json({
+        status: false,
+        message: "Employee not found",
+      });
+    }
+
+    order.assignedEmployee = employeeId;
+    order.status = "PROCESSING";
+
+    await order.save();
 
     res.json({
       status: true,
-      count: orders.length,
-      orders,
+      message: "Employee assigned successfully",
+      order,
     });
   } catch (err) {
     res.json({
       status: false,
-      message: "User orders fetch failed",
+      message: "Assign failed",
       error: err.message,
     });
   }

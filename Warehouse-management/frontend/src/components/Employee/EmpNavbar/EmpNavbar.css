@@ -1,0 +1,89 @@
+:root {
+  --dark-teal: #132f38;
+  --white: #ffffff;
+  --medium-teal: #1e5d66;
+  --light-teal: #60b1b7;
+  --very-light-aqua: #c5f1f5;
+  --blue-accent: #7ab9e8;
+  --button-dark: #39404f;
+}
+
+/* Navbar Container */
+.navbar {
+  background: var(--white);
+  padding: 10px 20px;
+  border-radius: 50px;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* Nav List */
+.nav-list {
+  list-style: none;
+  display: flex;
+  gap: 30px;
+  margin: 0;
+  padding: 0;
+}
+
+/* Nav Items */
+.nav-item {
+  position: relative;
+  padding: 10px 20px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--button-dark);
+  transition: all 0.3s ease;
+}
+
+/* Hover for main nav items */
+.nav-item:hover {
+  background: var(--very-light-aqua);
+}
+
+/* Active main nav item */
+.nav-item.active {
+  background: var(--light-teal);
+  color: var(--dark-teal);
+}
+
+/* Dropdown container */
+.dropdown {
+  position: absolute;
+  top: 110%; /* below nav-item */
+  left: 0;
+  background: var(--white);
+  border-radius: 20px;
+  list-style: none;
+  padding: 10px 0;
+  min-width: 150px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  z-index: 100;
+}
+
+/* Dropdown items */
+.dropdown-item {
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border-radius: 20px;
+}
+
+/* Hover for dropdown items */
+.dropdown-item:hover {
+  background: var(--very-light-aqua);
+  font-weight: 600;
+}
+
+/* Link styling */
+.nav-item a,
+.dropdown-item a {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  width: 100%;
+}

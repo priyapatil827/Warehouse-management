@@ -11,6 +11,7 @@ import profileRouter from "./routes/profileRoutes.js";
 import path from "path";
 import employeeRouter from "./routes/employeeRoutes.js";
 import supplierRouter from './routes/supplierRoutes.js'
+import billRouter from "./routes/billRoutes.js";
 dotenv.config();
 
 const app = express();
@@ -33,6 +34,7 @@ app.use("/api/stock", stockRouter);
 app.use("/api/order", orderRouter);
 app.use("/api/employee", employeeRouter);
 app.use("/api/supplier", supplierRouter);
+app.use("/api/bill", billRouter);
 
 
 app.listen(5050, () => {

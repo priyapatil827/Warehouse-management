@@ -7,7 +7,9 @@ import "./EMPSignIn.css";
 export default function EMPSignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState({ show: false, message: "", type: "" });
+
   const navigate = useNavigate();
 
   const handleSignIn = async () => {
@@ -21,13 +23,20 @@ export default function EMPSignIn() {
     }
 
     try {
-      const res = await axios.post(`${base_uri}/employee/login`, {
-        email,
-        password,
-      });
+      setLoading(true);
+
+      const res = await axios.post(
+        `${base_uri}/employee/login`,
+        { email, password },
+        { withCredentials: true }
+      );
 
       if (res.data.status === true) {
-        localStorage.setItem("employee", JSON.stringify(res.data.employee));
+        // ✅ Save employee data
+        localStorage.setItem(
+          "employee",
+          JSON.stringify(res.data.employee)
+        );
 
         setToast({
           show: true,
@@ -36,7 +45,7 @@ export default function EMPSignIn() {
         });
 
         setTimeout(() => {
-          navigate("/employee-dashboard");
+          navigate("/empDashboard");
         }, 1500);
       } else {
         setToast({
@@ -48,9 +57,13 @@ export default function EMPSignIn() {
     } catch (error) {
       setToast({
         show: true,
-        message: "Server Error ❌ Try again",
+        message:
+          error.response?.data?.message ||
+          "Server Error ❌ Try again",
         type: "error",
       });
+    } finally {
+      setLoading(false);
     }
 
     setTimeout(() => {
@@ -65,25 +78,17 @@ export default function EMPSignIn() {
         {/* LEFT PANEL */}
         <div className="welcome-panel">
           <div className="logo">EMP</div>
-
           <h1>Employee Portal</h1>
           <p>
-            Sign in to access your assigned tasks, stock updates,
-            and warehouse operations dashboard.
+            Sign in to access your assigned tasks,
+            stock updates and dashboard.
           </p>
         </div>
 
         {/* RIGHT PANEL */}
         <div className="form-panel">
           <h2>Employee Sign In</h2>
-          <p className="subtext">
-            Don’t have an account?{" "}
-            <span onClick={() => navigate("/employee-signup")}>
-              Create Account
-            </span>
-          </p>
 
-          {/* Email */}
           <div className="form-field">
             <label>Email</label>
             <input
@@ -94,7 +99,6 @@ export default function EMPSignIn() {
             />
           </div>
 
-          {/* Password */}
           <div className="form-field">
             <label>Password</label>
             <input
@@ -105,13 +109,17 @@ export default function EMPSignIn() {
             />
           </div>
 
-          <button className="signin-btn" onClick={handleSignIn}>
-            Sign In
+          <button
+            className="signin-btn"
+            onClick={handleSignIn}
+            disabled={loading}
+          >
+            {loading ? "Signing In..." : "Sign In"}
           </button>
         </div>
       </div>
 
-      {/* TOAST */}
+      {/* Toast */}
       {toast.show && (
         <div className={`toast ${toast.type}`}>
           {toast.message}
