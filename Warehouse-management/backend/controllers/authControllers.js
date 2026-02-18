@@ -12,7 +12,7 @@ export const signup = async (req, res) => {
     // Check if user already exists
     const hashed = await bcrypt.hash(password, 12);
     const user = await ProfileModel.create({ email });
-    await AuthModel.create({ email, password: hashed, user: user._id   });
+    await AuthModel.create({ email, password: hashed, user: user._id });
 
     res.json({ status: true, message: "Signup successful" });
   } catch (err) {
@@ -107,10 +107,26 @@ export const forgotPassword = async (req, res) => {
   const { email } = req.body;
   try {
     const user = await AuthModel.findOne({ email });
-    const status = await sendOTP(email);
-    res.json(status);
+
+    if (!user) {
+      return res.json({ status: false, message: "User not found" });
+    }
+
+    const otpStatus = await sendOTP(email);
+
+    if (otpStatus) {
+      return res.json({
+        status: true,
+        message: "OTP sent successfully",
+      });
+    } else {
+      return res.json({
+        status: false,
+        message: "OTP sending failed",
+      });
+    }
   } catch (err) {
-    res.json({
+    return res.json({
       status: false,
       message: "Forgot password failed",
       error: err.message,
@@ -120,30 +136,54 @@ export const forgotPassword = async (req, res) => {
 
 //change forgot password
 export const changeForgotPassword = async (req, res) => {
-  const { email, password, otp } = req.body;
   try {
+    const { email, password, otp } = req.body;
+
+    if (!email || !password || !otp) {
+      return res.json({
+        status: false,
+        message: "All fields required ❌",
+      });
+    }
+
+    // OTP verify
     const record = await OtpModel.findOne({ email, otp });
+
     if (!record) {
-      return res.json({ status: false, message: " OTP is incorrect" });
+      return res.json({
+        status: false,
+        message: "Invalid OTP ❌",
+      });
     }
-    if (record.expiry < new Date(Date.now())) {
-      return res.json({ status: false, message: " OTP is expired" });
+
+    // OTP expiry check
+    if (record.expiry < new Date()) {
+      return res.json({
+        status: false,
+        message: "OTP expired ❌",
+      });
     }
-    const hashed = await bcrypt.hash(password, 12);
+
+    // hash new password
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    // ✅ UPDATE AUTH MODEL (NOT UserModel)
     await AuthModel.updateOne(
       { email },
-      {
-        $set: {
-          password: hashed,
-        },
-      },
+      { $set: { password: hashedPassword } },
     );
-    res.json({ status: true, message: "Password changed successfully" });
-  } catch (err) {
-    res.json({
+
+    // ✅ DELETE OTP AFTER PASSWORD CHANGE
+    await OtpModel.deleteMany({ email });
+
+    return res.json({
+      status: true,
+      message: "Password changed successfully ✅",
+    });
+  } catch (error) {
+    return res.json({
       status: false,
-      message: "Change forgot password failed",
-      error: err.message,
+      message: error.message,
     });
   }
 };

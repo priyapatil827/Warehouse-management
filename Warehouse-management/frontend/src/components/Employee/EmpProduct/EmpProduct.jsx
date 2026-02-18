@@ -7,13 +7,7 @@ import "./EmpProduct.css";
 
 export default function ProductManagement() {
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const [sortOption, setSortOption] = useState("");
-
-  const [orderList, setOrderList] = useState([]); // selected products
+  const [orderList, setOrderList] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,145 +16,127 @@ export default function ProductManagement() {
 
   const fetchProducts = async () => {
     try {
-      const res = await axios.get(`${base_uri}/product/getAllProducts`, {
-        withCredentials: true,
-      });
-      const productList = res.data.products || [];
-      setProducts(productList);
-      localStorage.setItem("totalProducts", productList.length);
+      const res = await axios.get(
+        `${base_uri}/product/getAllProducts`,
+        { withCredentials: true }
+      );
+      setProducts(res.data.products || []);
     } catch (err) {
-      console.log("Fetch products error:", err);
-    } finally {
-      setLoading(false);
+      console.log(err);
     }
   };
 
-  // Filter & sort
-  let filteredProducts = products.filter((p) => {
-    const matchSearch =
-      p.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.category?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchCategory = selectedCategory === "All" || p.category === selectedCategory;
-    return matchSearch && matchCategory;
-  });
+  /* ===== STOCK STATUS ===== */
+  const getStatus = (stock) => {
+    if (stock === 0) return "Inactive";
+    if (stock < 50) return "Pending";
+    if (stock < 200) return "On Sale";
+    return "Active";
+  };
 
-  if (sortOption === "price-asc") filteredProducts.sort((a, b) => a.price - b.price);
-  if (sortOption === "price-desc") filteredProducts.sort((a, b) => b.price - a.price);
-  if (sortOption === "stock-asc") filteredProducts.sort((a, b) => a.stock - b.stock);
-  if (sortOption === "stock-desc") filteredProducts.sort((a, b) => b.stock - a.stock);
-
-  // Add product to order
+  /* ===== ADD TO ORDER ===== */
   const addToOrder = (product) => {
-    const existing = orderList.find((p) => p._id === product._id);
-    if (!existing) {
-      setOrderList([...orderList, { ...product, quantity: 1 }]);
-    }
-  };
+    const exists = orderList.find(
+      (p) => p._id === product._id
+    );
 
-  const updateQuantity = (id, qty) => {
-    setOrderList(orderList.map((p) => (p._id === id ? { ...p, quantity: parseInt(qty) } : p)));
+    if (exists) {
+      setOrderList(
+        orderList.map((p) =>
+          p._id === product._id
+            ? { ...p, quantity: p.quantity + 1 }
+            : p
+        )
+      );
+    } else {
+      setOrderList([
+        ...orderList,
+        { ...product, quantity: 1 },
+      ]);
+    }
   };
 
   return (
     <>
       <EmpNavbar />
+
       <div className="emp-container emp-flex">
-        {/* LEFT: Products */}
+        {/* ================= LEFT : PRODUCTS ================= */}
         <div className="emp-left">
-          <h2 className="emp-title">Products</h2>
+          <h2>Products</h2>
 
-          <div className="emp-section">
-            <input
-              type="text"
-              placeholder="Search product..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-            >
-              {["All", ...new Set(products.map((p) => p.category).filter(Boolean))].map(
-                (cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
-                  </option>
-                )
-              )}
-            </select>
+          <div className="emp-cards">
+            {products.map((p) => {
+              const status = getStatus(p.stock);
 
-            <select value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
-              <option value="">Sort By</option>
-              <option value="price-asc">Price: Low → High</option>
-              <option value="price-desc">Price: High → Low</option>
-              <option value="stock-asc">Stock: Low → High</option>
-              <option value="stock-desc">Stock: High → Low</option>
-            </select>
-          </div>
-
-          {loading ? (
-            <p className="no-data">Loading products...</p>
-          ) : filteredProducts.length === 0 ? (
-            <p className="no-data">No products found ✨</p>
-          ) : (
-            <div className="emp-cards">
-              {filteredProducts.map((p) => (
+              return (
                 <div key={p._id} className="emp-card">
                   <img
                     src={
                       p.image
-                        ? `${base_uri.replace("/api", "")}/uploads/${p.image}`
-                        : "https://via.placeholder.com/100"
+                        ? `${base_uri.replace(
+                            "/api",
+                            ""
+                          )}/uploads/${p.image}`
+                        : "https://via.placeholder.com/300x200"
                     }
                     alt={p.name}
                   />
+
                   <h3>{p.name}</h3>
-                  <p>Price: ₹{p.price}</p>
-                  <p>Stock: {p.stock} pcs</p>
-                  <p>Category: {p.category || "Other"}</p>
-                  {p.stock < 50 && (
-                    <p style={{ color: "#ffbaba", fontWeight: "bold" }}>⚠️ Low Stock!</p>
-                  )}
-                  <button className="emp-btn" onClick={() => addToOrder(p)}>
+                  <p className="price">₹{p.price}</p>
+
+                  <p className="muted">
+                    Stock: <b>{p.stock}</b> pcs
+                  </p>
+
+                  <p className="muted">
+                    Category: {p.category || "Other"}
+                  </p>
+
+                  <span
+                    className={`status ${status
+                      .toLowerCase()
+                      .replace(" ", "-")}`}
+                  >
+                    {status}
+                  </span>
+
+                  <button onClick={() => addToOrder(p)}>
                     Add to Order
                   </button>
                 </div>
-              ))}
-            </div>
-          )}
+              );
+            })}
+          </div>
         </div>
 
-        {/* RIGHT: Order Panel */}
+        {/* ================= RIGHT : ORDER PANEL ================= */}
         <div className="emp-right">
           <h3>Order Panel</h3>
 
           {orderList.length === 0 ? (
-            <p className="no-data">No products added yet</p>
+            <p className="no-data">No products added</p>
           ) : (
-            <div className="order-list">
-              {orderList.map((p, i) => (
-                <div key={p._id} className="order-item">
-                  <strong>{p.name}</strong>
-                  <p>Price: ₹{p.price}</p>
-                  <p>
-                    Qty:{" "}
-                    <input
-                      type="number"
-                      min="1"
-                      value={p.quantity}
-                      onChange={(e) => updateQuantity(p._id, e.target.value)}
-                    />
-                  </p>
-                </div>
-              ))}
-            </div>
+            orderList.map((p) => (
+              <div key={p._id} className="order-item">
+                <span>{p.name}</span>
+                <span>× {p.quantity}</span>
+              </div>
+            ))
           )}
+
           {orderList.length > 0 && (
             <button
-              className="emp-btn"
-              style={{ marginTop: "15px", width: "100%" }}
-              onClick={() => navigate("/empBilling", { state: { orderList } })}
+              className="billing-btn"
+              onClick={() => {
+                // 🔥 IMPORTANT FIX
+                localStorage.removeItem("activeBillId");
+
+                navigate("/empBilling", {
+                  state: { orderList },
+                });
+              }}
             >
               Go to Billing
             </button>

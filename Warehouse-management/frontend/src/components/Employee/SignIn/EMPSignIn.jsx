@@ -45,7 +45,7 @@ export default function EMPSignIn() {
         });
 
         setTimeout(() => {
-          navigate("/empDashboard");
+          navigate("/empProduct");
         }, 1500);
       } else {
         setToast({

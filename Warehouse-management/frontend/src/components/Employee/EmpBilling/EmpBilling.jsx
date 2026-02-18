@@ -1,268 +1,222 @@
-import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import axios from "axios";
-import { base_uri } from "../../../api/api";
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import EmpNavbar from "../EmpNavbar/EmpNavbar";
 import "./EmpBilling.css";
 
 export default function EmpBilling() {
   const location = useLocation();
-  const { orderList: initialOrderList } = location.state || { orderList: [] };
+  const navigate = useNavigate();
 
-  // Get signed-in employee from localStorage
-  let storedEmployee = null;
-  try {
-    storedEmployee = JSON.parse(localStorage.getItem("employee"));
-  } catch (e) {
-    console.error("Failed to parse employee from localStorage", e);
-  }
+  const { orderList = [], employeeName = "Employee" } =
+    location.state || {};
 
-  const effectiveEmployeeName = storedEmployee?.name || "";
+  const [allBills, setAllBills] = useState([]);
 
-  const [orderList, setOrderList] = useState(initialOrderList);
-  const [billType, setBillType] = useState("Cash");
-  const [status, setStatus] = useState("Pending");
-  const [submitting, setSubmitting] = useState(false);
-  const [billId, setBillId] = useState(null);
-  const [savedBill, setSavedBill] = useState(null); // Card display
-
-  // Total amount calculation
-  const totalAmount = orderList.reduce(
-    (acc, item) => acc + (item.price || 0) * (item.quantity || 0),
-    0
-  );
-
-  // Fetch existing pending bill
+  /* ===============================
+     LOAD / RESUME ACTIVE BILL
+  =============================== */
   useEffect(() => {
-    const fetchPendingBill = async () => {
-      if (!effectiveEmployeeName) return;
-      try {
-        const res = await axios.get(
-          `${base_uri}/empBill/getAll?employeeName=${effectiveEmployeeName}`,
-          { withCredentials: true }
-        );
+    const storedBills =
+      JSON.parse(localStorage.getItem("allBills")) || [];
 
-        if (res.data.status && res.data.bills.length > 0) {
-          // Get first pending or processing bill
-          const pendingBill = res.data.bills.find(
-            (b) => b.status !== "Delivered"
-          );
-          if (pendingBill) {
-            setBillId(pendingBill._id);
-            setStatus(pendingBill.status);
-            setBillType(pendingBill.billType || "Cash");
+    let activeBillId =
+      localStorage.getItem("activeBillId");
 
-            setOrderList(
-              pendingBill.products.map((p) => {
-                const product = p.productId || {};
-                return {
-                  _id: product._id || p.productId,
-                  name: product.name || "Unknown",
-                  price: product.price || 0,
-                  image: product.image || "",
-                  quantity: p.quantity || 1,
-                };
-              })
-            );
-          }
-        }
-      } catch (err) {
-        console.error("Error fetching bill:", err.response || err);
-      }
-    };
+    if (!activeBillId) {
+      activeBillId = Date.now().toString();
+      localStorage.setItem("activeBillId", activeBillId);
+    }
 
-    fetchPendingBill();
-  }, [effectiveEmployeeName]);
-
-  // Update quantity of a product
-  const updateQuantity = (id, qty) => {
-    setOrderList(
-      orderList.map((p) =>
-        p._id === id ? { ...p, quantity: parseInt(qty) } : p
-      )
+    const existingBill = storedBills.find(
+      (b) => b.billId === activeBillId
     );
-  };
 
-  // Save or update bill
-  const saveBill = async () => {
-    if (orderList.length === 0) return alert("No products in the bill!");
-    setSubmitting(true);
-
-    try {
-      const billData = {
-        products: orderList.map((p) => ({
-          productId: p._id,
-          quantity: p.quantity,
-        })),
-        billType,
-        status,
-        totalAmount,
-        employeeName: effectiveEmployeeName,
+    if (!existingBill && orderList.length > 0) {
+      const newBill = {
+        billId: activeBillId,
+        employeeName,
+        items: orderList,
+        status: "Pending",
+        date: new Date().toLocaleDateString(),
       };
 
-      let res;
-      if (billId) {
-        // Update existing bill
-        res = await axios.put(`${base_uri}/empBill/update/${billId}`, billData, {
-          withCredentials: true,
-        });
-      } else {
-        // Create new bill
-        res = await axios.post(`${base_uri}/empBill/create`, billData, {
-          withCredentials: true,
-        });
-      }
-
-      if (res.data.status) {
-        alert("Bill saved successfully!");
-        setBillId(res.data.bill?._id || billId);
-        setSavedBill(res.data.bill);
-      } else {
-        alert("Error: " + res.data.message);
-      }
-    } catch (err) {
-      console.error("Save bill error:", err.response || err);
-      alert("Something went wrong!");
-    } finally {
-      setSubmitting(false);
+      const updated = [...storedBills, newBill];
+      localStorage.setItem("allBills", JSON.stringify(updated));
+      setAllBills(updated);
+    } else {
+      setAllBills(storedBills);
     }
+  }, []);
+
+  /* ===============================
+     PRODUCT CANCEL (REMOVE)
+  =============================== */
+  const handleRemoveProduct = (billId, productId) => {
+    const updatedBills = allBills.map((bill) => {
+      if (bill.billId !== billId) return bill;
+
+      return {
+        ...bill,
+        items: bill.items.filter(
+          (item) => item._id !== productId
+        ),
+      };
+    });
+
+    localStorage.setItem(
+      "allBills",
+      JSON.stringify(updatedBills)
+    );
+    setAllBills(updatedBills);
   };
 
-  // Download PDF
-  const downloadPDF = () => {
-    if (!billId) return;
-    window.open(`${base_uri}/empBill/downloadPDF?billId=${billId}`, "_blank");
+  /* ===============================
+     STATUS CHANGE
+  =============================== */
+  const handleStatusChange = (newStatus, bill) => {
+    if (newStatus === "Delivered") {
+      const history =
+        JSON.parse(localStorage.getItem("billHistory")) || [];
+
+      localStorage.setItem(
+        "billHistory",
+        JSON.stringify([...history, { ...bill, status: "Delivered" }])
+      );
+
+      const remainingBills = allBills.filter(
+        (b) => b.billId !== bill.billId
+      );
+
+      localStorage.setItem(
+        "allBills",
+        JSON.stringify(remainingBills)
+      );
+      setAllBills(remainingBills);
+
+      if (
+        bill.billId ===
+        localStorage.getItem("activeBillId")
+      ) {
+        localStorage.removeItem("activeBillId");
+      }
+      return;
+    }
+
+    const updatedBills = allBills.map((b) =>
+      b.billId === bill.billId
+        ? { ...b, status: newStatus }
+        : b
+    );
+
+    localStorage.setItem(
+      "allBills",
+      JSON.stringify(updatedBills)
+    );
+    setAllBills(updatedBills);
   };
 
   return (
     <>
       <EmpNavbar />
-      <div className="billing-container">
-        <h2>Billing</h2>
-        <p>
-          <strong>Employee:</strong> {effectiveEmployeeName}
-        </p>
-        <p>
-          <strong>Status:</strong> {status}
-        </p>
 
-        {orderList.length === 0 ? (
-          <p className="no-data">No products selected for billing.</p>
-        ) : (
-          <>
-            <div className="billing-products">
-              {orderList.map((p) => (
-                <div key={p._id} className="billing-item">
-                  <img
-                    src={
-                      p.image
-                        ? `${base_uri.replace("/api", "")}/uploads/${p.image}`
-                        : "https://via.placeholder.com/60"
-                    }
-                    alt={p.name}
-                  />
-                  <div className="billing-details">
-                    <h4>{p.name}</h4>
-                    <p>Price: ₹{p.price}</p>
-                    <p>
-                      Qty:{" "}
-                      {status === "Delivered" ? (
-                        <span>{p.quantity}</span>
-                      ) : (
-                        <input
-                          type="number"
-                          min="1"
-                          value={p.quantity}
-                          onChange={(e) =>
-                            updateQuantity(p._id, e.target.value)
-                          }
-                        />
-                      )}
-                    </p>
-                    <p>Subtotal: ₹{p.price * p.quantity}</p>
+      <div className="bill-container">
+        {allBills
+          .filter((bill) => bill.items && bill.items.length > 0)
+          .map((bill, index) => {
+            const subtotal = bill.items.reduce(
+              (s, i) => s + i.price * i.quantity,
+              0
+            );
+            const gst = subtotal * 0.18;
+            const total = subtotal + gst;
+
+            return (
+              <div key={bill.billId} className="bill-box">
+                <h2 className="center">
+                  🧾 INVOICE #{index + 1}
+                </h2>
+
+                <div className="bill-info">
+                  <div>
+                    <p><b>Employee:</b> {bill.employeeName}</p>
+                    <p><b>Date:</b> {bill.date}</p>
+                    <p><b>Invoice:</b> INV-{bill.billId}</p>
+                  </div>
+
+                  <div>
+                    <label><b>Status:</b></label>
+                    <select
+                      value={bill.status}
+                      onChange={(e) =>
+                        handleStatusChange(e.target.value, bill)
+                      }
+                    >
+                      <option>Pending</option>
+                      <option>Processing</option>
+                      <option>Shipped</option>
+                      <option>Delivered</option>
+                    </select>
                   </div>
                 </div>
-              ))}
-            </div>
 
-            <div className="billing-summary">
-              <label>
-                Bill Type:
-                <select
-                  value={billType}
-                  onChange={(e) => setBillType(e.target.value)}
-                  disabled={status === "Delivered"}
-                >
-                  <option value="Cash">Cash</option>
-                  <option value="Card">Card</option>
-                  <option value="UPI">UPI</option>
-                </select>
-              </label>
+                {/* PRODUCTS */}
+                <table className="bill-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Product</th>
+                      <th>Price</th>
+                      <th>Qty</th>
+                      <th>Total</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {bill.items.map((item, i) => (
+                      <tr key={item._id}>
+                        <td>{i + 1}</td>
+                        <td>{item.name}</td>
+                        <td>₹{item.price}</td>
+                        <td>{item.quantity}</td>
+                        <td>₹{item.price * item.quantity}</td>
+                        <td>
+                          <button
+                            className="cancel-btn"
+                            onClick={() =>
+                              handleRemoveProduct(
+                                bill.billId,
+                                item._id
+                              )
+                            }
+                          >
+                            ❌ Cancel
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
 
-              <label>
-                Status:
-                <select
-                  value={status}
-                  onChange={(e) => setStatus(e.target.value)}
-                  disabled={status === "Delivered"}
-                >
-                  <option value="Pending">Pending</option>
-                  <option value="Processing">Processing</option>
-                  <option value="Shipped">Shipped</option>
-                  <option value="Delivered">Delivered</option>
-                </select>
-              </label>
+                <div className="bill-summary">
+                  <p>Subtotal: ₹{subtotal}</p>
+                  <p>GST (18%): ₹{gst.toFixed(2)}</p>
+                  <h3>Grand Total: ₹{total.toFixed(2)}</h3>
+                </div>
+              </div>
+            );
+          })}
 
-              <h3>Total Amount: ₹{totalAmount}</h3>
-
-              {status !== "Delivered" && (
-                <button
-                  className="billing-btn"
-                  onClick={saveBill}
-                  disabled={submitting}
-                >
-                  {submitting ? "Saving..." : "Save/Update Bill"}
-                </button>
-              )}
-
-              {status === "Delivered" && billId && (
-                <button className="billing-btn pdf-btn" onClick={downloadPDF}>
-                  Download PDF
-                </button>
-              )}
-            </div>
-          </>
-        )}
-
-        {/* Saved Bill Card */}
-        {savedBill && (
-          <div className="saved-bill-card">
-            <h3>Saved Bill</h3>
-            <p>
-              <strong>Bill ID:</strong> {savedBill._id}
-            </p>
-            <p>
-              <strong>Employee:</strong> {savedBill.employeeName}
-            </p>
-            <p>
-              <strong>Status:</strong> {savedBill.status}
-            </p>
-            <p>
-              <strong>Total:</strong> ₹{savedBill.totalAmount}
-            </p>
-            <ul>
-              {savedBill.products.map((p) => {
-                const product = p.productId || {};
-                return (
-                  <li key={product._id || Math.random()}>
-                    {product.name || "Unknown"} - Qty: {p.quantity} - ₹
-                    {(product.price || 0) * p.quantity}
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        )}
+        {/* NEW BILL */}
+        <div className="bill-actions">
+          <button
+            onClick={() => {
+              localStorage.removeItem("activeBillId");
+              navigate("/empProduct");
+            }}
+          >
+            ➕ Create New Bill
+          </button>
+        </div>
       </div>
     </>
   );

@@ -1,105 +1,161 @@
-.billing-container {
-  padding: 20px;
-  background: #0b1f2a;
+:root {
+  --dark-teal: #132f38;          /* Page background */
+  --white: #ffffff;             /* Cards */
+  --deep-blue: #0b1f2a;          /* Headings */
+  --medium-teal: #1e5d66;        /* Primary buttons */
+  --light-teal: #60b1b7;         /* Borders / highlights */
+  --very-light-aqua: #c5f1f5;    /* Table header / hover */
+  --blue-accent: #7ab9e8;        /* Accent glow */
+  --button-dark: #39404f;        /* Summary text */
+  --google-red: #ea4335;         /* Cancel button */
+  --link-teal: #55a6b1;
+}
+
+/* ===============================
+   PAGE
+================================ */
+.bill-container {
+  background: var(--dark-teal);
   min-height: 100vh;
-  color: #fff;
+  padding: 30px;
 }
 
-.billing-container h2 {
-  margin-bottom: 10px;
+/* ===============================
+   BILL CARD
+================================ */
+.bill-box {
+  background: var(--white);
+  border-radius: 14px;
+  padding: 25px;
+  margin-bottom: 30px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  border-left: 6px solid var(--medium-teal);
 }
 
-.billing-products {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 15px;
-  margin-top: 10px;
+.center {
+  text-align: center;
+  color: var(--deep-blue);
+  margin-bottom: 20px;
 }
 
-.billing-item {
+/* ===============================
+   BILL INFO
+================================ */
+.bill-info {
   display: flex;
-  gap: 15px;
-  background: #1e5d66;
-  padding: 12px;
-  border-radius: 10px;
-  align-items: center;
-}
-
-.billing-item img {
-  width: 60px;
-  height: 60px;
-  object-fit: cover;
-  border-radius: 6px;
-}
-
-.billing-details h4 {
-  margin: 0 0 5px 0;
-}
-
-.billing-details p {
-  margin: 3px 0;
-  font-size: 14px;
-}
-
-.billing-details input {
-  width: 50px;
-  padding: 4px;
-  border-radius: 4px;
-  border: none;
-  background: #c5f1f5;
-  color: #132f38;
-}
-
-.billing-summary {
-  margin-top: 25px;
-  background: #132f38;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  background: var(--very-light-aqua);
   padding: 15px;
   border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  margin-bottom: 20px;
 }
 
-.billing-summary label {
-  display: block;
+.bill-info p {
+  margin: 6px 0;
+  color: var(--deep-blue);
 }
 
-.billing-summary select {
+.bill-info select {
   padding: 6px 10px;
   border-radius: 6px;
-  border: none;
-  margin-left: 10px;
+  border: 2px solid var(--light-teal);
+  background: var(--white);
+  color: var(--deep-blue);
+  font-weight: 600;
+  cursor: pointer;
 }
 
-.billing-btn {
-  padding: 8px 15px;
-  border-radius: 6px;
+/* ===============================
+   TABLE
+================================ */
+.bill-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.bill-table th {
+  background: var(--medium-teal);
+  color: var(--white);
+  padding: 10px;
+  text-align: center;
+}
+
+.bill-table td {
+  padding: 10px;
+  text-align: center;
+  border-bottom: 1px solid var(--light-teal);
+  color: var(--deep-blue);
+}
+
+.bill-table tr:hover {
+  background: var(--very-light-aqua);
+}
+
+/* ===============================
+   CANCEL BUTTON
+================================ */
+.cancel-btn {
+  background: var(--google-red);
+  color: var(--white);
   border: none;
-  background: #60b1b7;
-  color: #fff;
+  padding: 6px 12px;
+  border-radius: 6px;
   cursor: pointer;
   font-weight: bold;
-  margin-top: 5px;
+  transition: 0.3s;
 }
 
-.billing-btn.advance-btn {
-  background: #ffbaba;
-  color: #132f38;
+.cancel-btn:hover {
+  background: #c7382f;
+  transform: scale(1.05);
 }
 
-.billing-btn.pdf-btn {
-  background: #c5f1f5;
-  color: #132f38;
-}
-
-.billing-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.no-data {
+/* ===============================
+   BILL SUMMARY
+================================ */
+.bill-summary {
+  margin-top: 20px;
   padding: 15px;
+  background: var(--very-light-aqua);
+  border-radius: 10px;
+  text-align: right;
+}
+
+.bill-summary p {
+  margin: 5px 0;
+  color: var(--button-dark);
+  font-weight: 500;
+}
+
+.bill-summary h3 {
+  margin-top: 10px;
+  color: var(--deep-blue);
+}
+
+/* ===============================
+   ACTION BUTTON
+================================ */
+.bill-actions {
   text-align: center;
+  margin-top: 40px;
+}
+
+.bill-actions button {
+  background: var(--medium-teal);
+  color: var(--white);
+  border: none;
+  padding: 14px 26px;
+  border-radius: 30px;
   font-size: 16px;
-  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  transition: 0.3s;
+}
+
+.bill-actions button:hover {
+  background: var(--deep-blue);
+  transform: translateY(-2px);
 }

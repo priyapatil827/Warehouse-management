@@ -1,5 +1,5 @@
 /* ===============================
-   Theme Variables
+   Root Theme Variables
 ================================ */
 :root {
   --dark-teal: #132f38;
@@ -36,7 +36,7 @@
 }
 
 /* ===============================
-   Inputs
+   OTP Input
 ================================ */
 .forgot-card input {
   width: 100%;
@@ -44,12 +44,15 @@
   margin-bottom: 14px;
   border-radius: 8px;
   border: 2px solid var(--light-teal);
-  font-size: 14px;
+  font-size: 15px;
   outline: none;
+  text-align: center;
+  letter-spacing: 3px;
   transition: all 0.3s ease;
 }
 
 .forgot-card input::placeholder {
+  letter-spacing: 1px;
   color: #8aaeb3;
 }
 
@@ -59,12 +62,25 @@
 }
 
 /* ===============================
+   OTP Timer
+================================ */
+.otp-timer {
+  font-size: 14px;
+  margin-bottom: 18px;
+  color: var(--deep-blue);
+}
+
+.otp-timer span {
+  font-weight: 600;
+  color: var(--medium-teal);
+}
+
+/* ===============================
    Button
 ================================ */
 .forgot-card button {
   width: 100%;
   padding: 12px;
-  margin-top: 10px;
   background-color: var(--medium-teal);
   color: var(--white);
   border: none;
@@ -81,7 +97,16 @@
 }
 
 /* ===============================
-   Toastify Custom Styles
+   Disabled Button
+================================ */
+.forgot-card button:disabled {
+  background-color: #9fbfc4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ===============================
+   Toastify Custom Styling
 ================================ */
 .Toastify__toast {
   border-radius: 10px !important;

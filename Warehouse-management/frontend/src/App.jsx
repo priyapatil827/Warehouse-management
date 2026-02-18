@@ -20,10 +20,13 @@ import ForgetPassword from './components/ForgetPassword/ForgetPassword';
 import ChangePassword from './components/ChangePassword/ChangePassword';
 import EMPSignIn from './components/Employee/SignIn/EMPSignIn';
 // import AddProduct from './components/Manager/AddProduct/AddProduct';
-import EmpDashboard from './components/Employee/empDashboard/empDashboard';
+// import EmpDashboard from './components/Employee/empDashboard/empDashboard';
 import EmpNavbar from './components/Employee/EmpNavbar/EmpNavbar';
 import EmpProduct from './components/Employee/EmpProduct/EmpProduct';
 import EmpBilling from './components/Employee/EmpBilling/EmpBilling';
+import ForgetVerifyOtp from './components/ForgetVerifyOtp/ForgetVerifyOtp';
+import EmpBillsHistory from './components/Employee/EmpBillHistory/EmpBillHistory';
+import EmpReport from './components/Employee/EmpReport/EmpReport';
 
 function App() {
   return (
@@ -44,13 +47,17 @@ function App() {
       <Route path='/setting' element={<Setting />}></Route>
       <Route path='/employees' element={<Employees />}></Route>
       <Route path='/forget-password' element={<ForgetPassword />}></Route>
+      <Route path='/forget-verify-otp' element={<ForgetVerifyOtp/>}></Route>
+      <Route path='/change-password' element={<ChangePassword />}></Route>
 
       {/* Employee routes */}
       <Route path='/employee-signin' element={<EMPSignIn />}></Route>
-      <Route path='/empDashboard' element={<EmpDashboard />}></Route>
+      {/* <Route path='/empDashboard' element={<EmpDashboard />}></Route> */}
       <Route path='/empNavbar' element={<EmpNavbar />}></Route>
       <Route path='/empProduct' element={<EmpProduct />}></Route>
       <Route path='/empBilling' element={<EmpBilling/>}></Route>
+      <Route path='/empBillHistory' element={<EmpBillsHistory/>}></Route>
+      <Route path='/empReport' element={<EmpReport/>}></Route>
     </Routes>
   )
 }

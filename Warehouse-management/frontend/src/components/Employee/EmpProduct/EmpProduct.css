@@ -1,95 +1,209 @@
-.emp-container.emp-flex {
-  display: flex;
-  gap: 20px;
+/* ===== ROOT COLORS ===== */
+:root {
+  --bg-main: #0f172a;        /* dark navy */
+  --bg-card: #1e293b;        /* card background */
+  --primary: #38bdf8;        /* sky blue */
+  --secondary: #22c55e;      /* green */
+  --text-main: #f8fafc;      /* white */
+  --text-muted: #94a3b8;     /* gray */
+  --danger: #ef4444;         /* red */
+}
+
+/* ===== PAGE LAYOUT ===== */
+.emp-container {
+  min-height: 100vh;
+  background: var(--bg-main);
+  color: var(--text-main);
   padding: 20px;
 }
 
+.emp-flex {
+  display: flex;
+  gap: 20px;
+}
+
+/* ===== LEFT (PRODUCTS) ===== */
 .emp-left {
   flex: 3;
 }
 
-.emp-right {
-  flex: 1;
-  background: #1e5d66;
-  padding: 20px;
-  border-radius: 12px;
-  color: #fff;
-  min-height: 400px;
+.emp-left h2 {
+  margin-bottom: 15px;
+  color: var(--primary);
 }
 
-.emp-section input,
-.emp-section select {
-  padding: 8px;
-  border-radius: 6px;
-  border: none;
-  margin-right: 8px;
-}
-
+/* ===== PRODUCT CARDS ===== */
 .emp-cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 20px;
-  margin-top: 20px;
 }
 
 .emp-card {
-  background: #1e5d66;
+  background: var(--bg-card);
+  border-radius: 14px;
   padding: 15px;
-  border-radius: 12px;
   text-align: center;
-  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .emp-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.3);
+  transform: translateY(-6px);
+  box-shadow: 0 15px 40px rgba(56, 189, 248, 0.25);
 }
 
+/* ===== PRODUCT IMAGE ===== */
 .emp-card img {
-  width: 100px;
-  height: 100px;
+  width: 100%;
+  height: 140px;
   object-fit: cover;
+  border-radius: 10px;
   margin-bottom: 10px;
-  border-radius: 8px;
+  background: #020617;
 }
 
-.emp-btn {
-  padding: 6px 12px;
+/* ===== TEXT ===== */
+.emp-card h3 {
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+.emp-card p {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+/* ===== BUTTON ===== */
+.emp-card button {
+  width: 100%;
+  padding: 8px 0;
+  background: linear-gradient(135deg, var(--primary), #0ea5e9);
+  color: #020617;
   border: none;
-  border-radius: 6px;
-  background: #60b1b7;
-  color: #fff;
+  border-radius: 8px;
+  font-weight: 600;
   cursor: pointer;
-  margin-top: 8px;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
-.emp-btn:hover {
-  background: #c5f1f5;
-  color: #132f38;
+.emp-card button:hover {
+  background: linear-gradient(135deg, #0ea5e9, var(--primary));
+  transform: scale(1.02);
 }
 
-.order-list {
-  margin-top: 15px;
+/* ===== RIGHT (ORDER PANEL) ===== */
+.emp-right {
+  flex: 1.2;
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 15px;
+  height: fit-content;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.emp-right h3 {
+  margin-bottom: 10px;
+  color: var(--secondary);
+}
+
+/* ===== ORDER ITEMS ===== */
+.emp-right p {
+  font-size: 14px;
+  background: #020617;
+  padding: 8px 10px;
+  border-radius: 6px;
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* ===== GO TO BILLING BUTTON ===== */
+.emp-right button {
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px;
+  background: linear-gradient(135deg, var(--secondary), #16a34a);
+  color: #022c22;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.emp-right button:hover {
+  background: linear-gradient(135deg, #16a34a, var(--secondary));
+  transform: scale(1.02);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .emp-flex {
+    flex-direction: column;
+  }
+
+  .emp-right {
+    width: 100%;
+  }
+}
+
+.price {
+  font-size: 15px;
+  font-weight: bold;
+  color: #38bdf8;
+}
+
+.muted {
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.status {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
+.status.active {
+  background: #22c55e;
+  color: #022c22;
+}
+
+.status.on-sale {
+  background: #38bdf8;
+  color: #020617;
+}
+
+.status.pending {
+  background: #facc15;
+  color: #422006;
+}
+
+.status.inactive {
+  background: #ef4444;
+  color: #450a0a;
 }
 
 .order-item {
-  background: #132f38;
+  display: flex;
+  justify-content: space-between;
+  background: #020617;
+  padding: 6px 10px;
+  border-radius: 6px;
+  margin-bottom: 6px;
+}
+
+.billing-btn {
+  width: 100%;
+  margin-top: 12px;
   padding: 10px;
-  border-radius: 8px;
-  margin-bottom: 12px;
-}
-
-.order-item input {
-  width: 50px;
-  padding: 4px;
-  margin-left: 5px;
-  border-radius: 4px;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
   border: none;
-}
-
-.no-data {
-  padding: 15px;
-  text-align: center;
-  color: #fff;
-  font-size: 14px;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
 }
