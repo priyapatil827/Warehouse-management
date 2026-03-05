@@ -1,0 +1,134 @@
+:root{
+--dark-teal: #132f38;
+--white: #ffffff;
+--deep-blue: #0b1f2a;
+--medium-teal: #1e5d66;
+--light-teal: #60b1b7;
+--very-light-aqua: #c5f1f5;
+--blue-accent: #7ab9e8;
+--button-dark: #39404f;
+--google-red: #ea4335;
+--link-teal: #55a6b1;
+}
+
+/* Page */
+.profile-container{
+display:flex;
+justify-content:center;
+gap:40px;
+padding:40px;
+background:var(--dark-teal);
+min-height:90vh;
+}
+
+/* LEFT PROFILE CARD */
+.profile-left{
+width:300px;
+background:var(--white);
+padding:30px;
+border-radius:12px;
+text-align:center;
+box-shadow:0 8px 25px rgba(0,0,0,0.2);
+}
+
+.profile-image{
+width:120px;
+height:120px;
+border-radius:50%;
+object-fit:cover;
+border:4px solid var(--light-teal);
+margin-bottom:15px;
+}
+
+.profile-left h2{
+color:var(--deep-blue);
+margin-bottom:5px;
+}
+
+.role{
+color:var(--button-dark);
+margin-bottom:20px;
+}
+
+/* BUTTONS */
+.edit-btn{
+background:var(--medium-teal);
+color:var(--white);
+border:none;
+padding:10px 20px;
+border-radius:6px;
+cursor:pointer;
+transition:0.3s;
+}
+
+.edit-btn:hover{
+background:var(--light-teal);
+}
+
+.save-btn{
+background:var(--deep-blue);
+color:var(--white);
+border:none;
+padding:10px 20px;
+border-radius:6px;
+cursor:pointer;
+}
+
+.save-btn:hover{
+background:var(--medium-teal);
+}
+
+/* RIGHT SIDE */
+.profile-right{
+width:450px;
+background:var(--white);
+padding:30px;
+border-radius:12px;
+box-shadow:0 8px 25px rgba(0,0,0,0.2);
+}
+
+.profile-right h3{
+color:var(--button-dark);
+margin-bottom:20px;
+border-bottom:2px solid var(--very-light-aqua);
+padding-bottom:10px;
+}
+
+/* INFO BOX */
+.info-box{
+display:flex;
+flex-direction:column;
+margin-bottom:15px;
+}
+
+.info-box span{
+font-size:14px;
+color:var(--medium-teal);
+margin-bottom:4px;
+}
+
+.info-box p{
+font-size:15px;
+color:var(--deep-blue);
+}
+
+/* INPUTS */
+.info-box input,
+.info-box textarea{
+padding:8px;
+border-radius:6px;
+border:1px solid var(--light-teal);
+outline:none;
+font-size:14px;
+}
+
+.info-box input:focus,
+.info-box textarea:focus{
+border-color:var(--medium-teal);
+box-shadow:0 0 5px var(--blue-accent);
+}
+
+textarea{
+resize:none;
+height:70px;
+}

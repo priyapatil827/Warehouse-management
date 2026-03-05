@@ -10,6 +10,12 @@ export default function EmpNavbar() {
     <nav className="navbar">
       <ul className="nav-list">
 
+        <li
+          className={`nav-item ${active === "Products" ? "active" : ""}`}
+          onClick={() => setActive("Products")}
+        >
+          <Link to="/empDashboard">Dashboard</Link>
+        </li>
 
         <li
           className={`nav-item ${active === "Products" ? "active" : ""}`}
@@ -22,7 +28,7 @@ export default function EmpNavbar() {
           className={`nav-item ${active === "Stock Control" ? "active" : ""}`}
           onClick={() => setActive("Stock Control")}
         >
-          <Link to="/empBilling">Biiling</Link>
+          <Link to="/empBilling">Biling</Link>
         </li>
 
         <li
@@ -36,21 +42,7 @@ export default function EmpNavbar() {
           className={`nav-item ${active === "Order" ? "active" : ""}`}
           onClick={() => setActive("Order")}
         >
-          <Link to="/profile">Profile</Link>
-        </li>
-
-        <li
-          className={`nav-item ${active === "Suppliers" ? "active" : ""}`}
-          onClick={() => setActive("Suppliers")}
-        >
-          <Link to="/task-mang">Task Management</Link>
-        </li>
-
-        <li
-          className={`nav-item ${active === "Employees" ? "active" : ""}`}
-          onClick={() => setActive("Employees")}
-        >
-          <Link to="/empReport">Report</Link>
+          <Link to="/empProfile">Profile</Link>
         </li>
 
 

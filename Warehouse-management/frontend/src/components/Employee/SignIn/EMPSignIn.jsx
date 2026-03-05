@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { base_uri } from "../../../api/api.js";
 import { useNavigate } from "react-router-dom";
@@ -7,19 +7,25 @@ import "./EMPSignIn.css";
 export default function EMPSignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [remember, setRemember] = useState(false);
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState({ show: false, message: "", type: "" });
 
   const navigate = useNavigate();
 
+  // 🔁 Remember Email
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("emp_email");
+    if (savedEmail) {
+      setEmail(savedEmail);
+      setRemember(true);
+    }
+  }, []);
+
   const handleSignIn = async () => {
     if (!email || !password) {
-      setToast({
-        show: true,
-        message: "Please fill all fields ❌",
-        type: "error",
-      });
-      return;
+      return showToast("Please fill all fields ❌", "error");
     }
 
     try {
@@ -38,34 +44,31 @@ export default function EMPSignIn() {
           JSON.stringify(res.data.employee)
         );
 
-        setToast({
-          show: true,
-          message: "Employee Login Successful 🎉",
-          type: "success",
-        });
+        // Remember email
+        remember
+          ? localStorage.setItem("emp_email", email)
+          : localStorage.removeItem("emp_email");
+
+        showToast("Employee Login Successful 🎉", "success");
 
         setTimeout(() => {
-          navigate("/empProduct");
-        }, 1500);
+          navigate("/empProfile");
+        }, 1200);
       } else {
-        setToast({
-          show: true,
-          message: res.data.message || "Invalid Credentials ❌",
-          type: "error",
-        });
+        showToast(res.data.message || "Invalid Credentials ❌", "error");
       }
     } catch (error) {
-      setToast({
-        show: true,
-        message:
-          error.response?.data?.message ||
-          "Server Error ❌ Try again",
-        type: "error",
-      });
+      showToast(
+        error.response?.data?.message || "Server Error ❌",
+        "error"
+      );
     } finally {
       setLoading(false);
     }
+  };
 
+  const showToast = (message, type) => {
+    setToast({ show: true, message, type });
     setTimeout(() => {
       setToast({ show: false, message: "", type: "" });
     }, 3000);
@@ -80,8 +83,8 @@ export default function EMPSignIn() {
           <div className="logo">EMP</div>
           <h1>Employee Portal</h1>
           <p>
-            Sign in to access your assigned tasks,
-            stock updates and dashboard.
+            Login to manage tasks, stock updates
+            and view your profile dashboard.
           </p>
         </div>
 
@@ -101,12 +104,28 @@ export default function EMPSignIn() {
 
           <div className="form-field">
             <label>Password</label>
+            <div className="password-box">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <span
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? "Hide" : "Show"}
+              </span>
+            </div>
+          </div>
+
+          <div className="remember-box">
             <input
-              type="password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              type="checkbox"
+              checked={remember}
+              onChange={() => setRemember(!remember)}
             />
+            <label>Remember Email</label>
           </div>
 
           <button

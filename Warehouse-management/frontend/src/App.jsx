@@ -1,4 +1,5 @@
 import './App.css'
+import React from 'react'
 import { Routes, Route } from "react-router-dom";
 import SignUp from './components/Manager/SignUp/SignUp'
 import SignIn from './components/Manager/SignIn/SignIn'
@@ -27,6 +28,8 @@ import EmpBilling from './components/Employee/EmpBilling/EmpBilling';
 import ForgetVerifyOtp from './components/ForgetVerifyOtp/ForgetVerifyOtp';
 import EmpBillsHistory from './components/Employee/EmpBillHistory/EmpBillHistory';
 import EmpReport from './components/Employee/EmpReport/EmpReport';
+import EmpProfile from './components/Employee/EmpProfile/EmpProfile';
+import EmpDashboard from './components/Employee/EmpDashboard/EmpDashboard';
 
 function App() {
   return (
@@ -58,6 +61,8 @@ function App() {
       <Route path='/empBilling' element={<EmpBilling/>}></Route>
       <Route path='/empBillHistory' element={<EmpBillsHistory/>}></Route>
       <Route path='/empReport' element={<EmpReport/>}></Route>
+      <Route path='/empProfile' element={<EmpProfile/>}></Route>
+      <Route path='/empDashboard' element={<EmpDashboard/>}></Route>
     </Routes>
   )
 }

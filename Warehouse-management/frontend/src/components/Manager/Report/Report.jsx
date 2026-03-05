@@ -119,8 +119,10 @@ export default function Report() {
   const totalSuppliers = supplierData.reduce((s, i) => s + i.value, 0);
 
   return (
-    <div className="report-page">
+    <>
       <Navbar />
+    <div className="report-page">
+    
 
       <div className="report-grid">
 
@@ -275,5 +277,6 @@ export default function Report() {
 
       </div>
     </div>
+    </>
   );
 }
